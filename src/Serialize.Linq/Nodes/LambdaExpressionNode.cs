@@ -68,11 +68,15 @@ namespace Serialize.Linq.Nodes
             var parameters = this.Parameters.GetParameterExpressions(context).ToArray();
 
             var bodyParameters = body.GetNodes().OfType<ParameterExpression>().ToArray();
-            for (var i = 0; i < parameters.Length; ++i)
+            if (bodyParameters.Length > 0)
             {
-                var matchingParameters = bodyParameters.Where(p => p.Name == parameters[i].Name && p.Type == parameters[i].Type).ToArray();
-                if (matchingParameters.Length == 1)
-                    parameters[i] = matchingParameters[0];
+                for (var i = 0; i < parameters.Length; ++i)
+                {
+                    var matchingParameters = bodyParameters.Where(p => p.Name == parameters[i].Name && p.Type == parameters[i].Type).ToArray();
+                    // ToDo: revert to .Length = 1?
+                    if (matchingParameters.Length > 0)
+                        parameters[i] = matchingParameters[0];
+                }
             }
 
             return Expression.Lambda(this.Type.ToType(context), body, parameters);

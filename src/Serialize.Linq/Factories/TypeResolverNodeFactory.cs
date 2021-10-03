@@ -97,15 +97,8 @@ namespace Serialize.Linq.Factories
                                         FieldInfo memberField = null;
                                         if (fields.Length > 0)
                                         {
-                                            if (fields.Length == 1)
-                                            {
-                                                memberField = fields[0];
-                                            }
-                                            else
-                                            {
-                                                memberField = fields.SingleOrDefault(n => field.Name.Equals(n.Name));
-                                            }
-                                            if (memberField == null && parentField != null && fields.Length > 1)
+                                            memberField = fields.SingleOrDefault(n => field.Name.Equals(n.Name));
+                                            if (memberField == null && parentField != null)
                                             {
                                                 memberField = fields.SingleOrDefault(n => parentField.Name.Equals(n.Name));
                                             }
@@ -117,7 +110,7 @@ namespace Serialize.Linq.Factories
                                         constantValue = memberField.GetValue(constantValue);
                                         match = true;
                                     }
-                                    while (!(constantValue == null  || KnownTypes.Match(constantValueType) || KnownTypes.TryAddAsAssignable(constantValueType)));
+                                    while (!(constantValue == null || KnownTypes.Match(constantValueType) || KnownTypes.TryAddAsAssignable(constantValueType)));
 
                                     return match;
                                 }
