@@ -64,22 +64,7 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            var body = this.Body.ToExpression(context);
-            var parameters = this.Parameters.GetParameterExpressions(context).ToArray();
-
-            var bodyParameters = body.GetNodes().OfType<ParameterExpression>().ToArray();
-            if (bodyParameters.Length > 0)
-            {
-                for (var i = 0; i < parameters.Length; ++i)
-                {
-                    var matchingParameters = bodyParameters.Where(p => p.Name == parameters[i].Name && p.Type == parameters[i].Type).ToArray();
-                    // ToDo: revert to .Length = 1?
-                    if (matchingParameters.Length > 0)
-                        parameters[i] = matchingParameters[0];
-                }
-            }
-
-            return Expression.Lambda(this.Type.ToType(context), body, parameters);
+            return Expression.Lambda(this.Type.ToType(context), this.Body.ToExpression(context), this.Parameters.GetParameterExpressions(context));
         }
     }
 }
