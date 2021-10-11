@@ -26,19 +26,11 @@ namespace Serialize.Linq.Internals
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComplexPropertyMemberTypeEnumerator"/> class.
-        /// </summary>C:\Dev\Esskar\Serialize.Linq\src\Serialize.Linq\Internals\MemberTypeEnumerator.cs
-        /// <param name="type">The type.</param>
-        /// <param name="bindingFlags">The binding flags.</param>
-        public ComplexPropertyMemberTypeEnumerator(Type type, BindingFlags bindingFlags)
-            : this(new List<Type>(), type, bindingFlags) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComplexPropertyMemberTypeEnumerator"/> class.
         /// </summary>
         /// <param name="seenTypes">The seen types.</param>
         /// <param name="type">The type.</param>
         /// <param name="bindingFlags">The binding flags.</param>
-        public ComplexPropertyMemberTypeEnumerator(IEnumerable<Type> seenTypes, Type type, BindingFlags bindingFlags)
+        public ComplexPropertyMemberTypeEnumerator(ISet<Type> seenTypes, Type type, BindingFlags bindingFlags)
             : base(seenTypes, type, bindingFlags) { }
 
         /// <summary>
@@ -48,7 +40,7 @@ namespace Serialize.Linq.Internals
         /// <returns>
         ///   <c>true</c> if [is builtin type] [the specified type]; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsBuiltinType(Type type)
+        private static bool IsBuiltinType(Type type)
         {
             return _builtinTypes.Contains(type);
         }
@@ -60,7 +52,7 @@ namespace Serialize.Linq.Internals
         /// <returns>
         ///   <c>true</c> if [is considered type] [the specified type]; otherwise, <c>false</c>.
         /// </returns>
-        protected override bool IsConsideredType(Type type)
+        public override bool IsConsideredType(Type type)
         {
             return !IsBuiltinType(type);
         }
