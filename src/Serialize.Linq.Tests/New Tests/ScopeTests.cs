@@ -9,7 +9,6 @@ namespace Serialize.Linq.Tests.NewTests
 {
 #pragma warning disable CA1822 // mark members as static
     /// <summary>
-    /// https://github.com/esskar/Serialize.Linq/issues/105
     /// Test and fix provided by https://github.com/oahrens
     /// </summary>
     [TestClass]
