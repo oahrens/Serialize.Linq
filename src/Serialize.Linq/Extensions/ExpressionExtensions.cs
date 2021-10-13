@@ -125,6 +125,54 @@ namespace Serialize.Linq.Extensions
         }
 
         /// <summary>
+        /// Converts an expression to a byte array.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="factorySettings">The factory settings to use.</param>
+        /// <returns>The byte array representing the serialized <paramref name="expression"/>.</returns>
+        public static byte[] ToBinary(this Expression expression, FactorySettings factorySettings = null)
+        {
+            return expression.ToBinary(expression.GetDefaultFactory(factorySettings));
+        }
+
+        /// <summary>
+        /// Converts an expression to a byte array using the given factory.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="factory">The factory.</param>
+        /// <returns>The byte array representing the serialized <paramref name="expression"/>.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <paramref name="factory"/>
+        /// </exception>
+        public static byte[] ToBinary(this Expression expression, INodeFactory factory)
+        {
+            return expression.ToBinary(factory, new BinarySerializer());
+        }
+
+        /// <summary>
+        /// Converts an expression to a byte array using the given factory and serializer.
+        /// The encoding is decided by the serializer.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <param name="factory">The factory.</param>
+        /// <param name="serializer">The serializer.</param>
+        /// <returns>The byte array representing the serialized <paramref name="expression"/>.</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <paramref name="factory"/>
+        /// or
+        /// <paramref name="serializer"/>
+        /// </exception>
+        public static byte[] ToBinary(this Expression expression, INodeFactory factory, IBinarySerializer serializer)
+        {
+            if (factory == null)
+                throw new ArgumentNullException(nameof(factory));
+            if (serializer == null)
+                throw new ArgumentNullException(nameof(serializer));
+
+            return serializer.Serialize(factory.Create(expression));
+        }
+
+        /// <summary>
         /// Gets the default factory.
         /// </summary>
         /// <param name="expression">The expression.</param>
