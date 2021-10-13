@@ -9,7 +9,7 @@ namespace Serialize.Linq.Tests.NewTests
     /// https://github.com/esskar/Serialize.Linq/issues/138
     /// </summary>
     [TestClass]
-    public class Issue138
+    public class Issue137
     {
         [TestMethod]
         public void SerializeInnerFunctionBinary()

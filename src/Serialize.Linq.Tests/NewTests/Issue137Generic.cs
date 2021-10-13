@@ -10,7 +10,7 @@ namespace Serialize.Linq.Tests.NewTests
     /// https://github.com/esskar/Serialize.Linq/issues/138
     /// </summary>
     [TestClass]
-    public class Issue138Generic
+    public class Issue137Generic
     {
         [TestMethod]
         public void SerializeInnerFunction()
