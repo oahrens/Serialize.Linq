@@ -20,7 +20,7 @@ namespace Serialize.Linq.Tests.NewTests
             SerializeInnerFunctionInternal(new JsonSerializer());
         }
 
-        private void SerializeInnerFunctionInternal<TSerialize>(IGenericSerializer<TSerialize> serializer)
+        private static void SerializeInnerFunctionInternal<TSerialize>(IGenericSerializer<TSerialize> serializer)
         {
             Expression<Func<object, object>> expr = x => FunctionsGeneric.F(x);
 

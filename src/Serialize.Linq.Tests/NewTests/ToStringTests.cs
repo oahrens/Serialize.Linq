@@ -17,7 +17,7 @@ namespace Serialize.Linq.Tests.NewTests
 #pragma warning disable CS0618 // type or member is obsolete
             ExpressionSerializer serializer = new ExpressionSerializer(new BinarySerializer());
 #pragma warning restore CS0618 // type or member is obsolete
-            Expression<Func<object, String>> expression = x => x.ToString();
+            Expression<Func<object, string>> expression = x => x.ToString();
             // the next line throws a InvalidOperationException in version 2.0.0.0
             var serialized = serializer.SerializeBinary(expression);
             var actualExpression = (Expression<Func<object, string>>)serializer.DeserializeBinary(serialized);
@@ -32,7 +32,7 @@ namespace Serialize.Linq.Tests.NewTests
 #pragma warning disable CS0618 // type or member is obsolete
             ExpressionSerializer serializer = new ExpressionSerializer(new XmlSerializer());
 #pragma warning restore CS0618 // type or member is obsolete
-            Expression<Func<object, String>> expression = x => x.ToString();
+            Expression<Func<object, string>> expression = x => x.ToString();
             // the next line throws a InvalidOperationException in version 2.0.0.0
             var serialized = serializer.SerializeText(expression);
             var actualExpression = (Expression<Func<object, string>>)serializer.DeserializeText(serialized);
@@ -47,7 +47,7 @@ namespace Serialize.Linq.Tests.NewTests
 #pragma warning disable CS0618 // type or member is obsolete
             ExpressionSerializer serializer = new ExpressionSerializer(new JsonSerializer());
 #pragma warning restore CS0618 // type or member is obsolete
-            Expression<Func<object, String>> expression = x => x.ToString();
+            Expression<Func<object, string>> expression = x => x.ToString();
             // the next line throws a InvalidOperationException in version 2.0.0.0
             var serialized = serializer.SerializeText(expression);
             var actualExpression = (Expression<Func<object, string>>)serializer.DeserializeText(serialized);

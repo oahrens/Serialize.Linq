@@ -20,7 +20,7 @@ namespace Serialize.Linq.Tests.NewTests
             SerializeToStringInternal(new JsonSerializer());
         }
 
-        private void SerializeToStringInternal<T>(IGenericSerializer<T> serializer)
+        private static void SerializeToStringInternal<T>(IGenericSerializer<T> serializer)
         {
             Expression<Func<object, string>> expression = x => x.ToString();
             var serialized = serializer.SerializeGeneric(expression);
