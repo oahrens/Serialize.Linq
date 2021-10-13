@@ -22,6 +22,7 @@ namespace Serialize.Linq.Nodes
 #endif
     #region KnownTypes
     [KnownType(typeof(BinaryExpressionNode))]
+    [KnownType(typeof(BlockExpressionNode))]
     [KnownType(typeof(ConditionalExpressionNode))]
     [KnownType(typeof(ConstantExpressionNode))]
     [KnownType(typeof(ConstructorInfoNode))]
