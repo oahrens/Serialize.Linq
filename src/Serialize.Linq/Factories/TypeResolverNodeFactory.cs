@@ -233,7 +233,7 @@ namespace Serialize.Linq.Factories
                         return new ConstantExpressionNode(this, Expression.Lambda(methodCallExpression).Compile().DynamicInvoke());
                 }
             }
-            else if (methodCallExpression.Method.Name == "ToString" && methodCallExpression.Method.ReturnType == typeof(string))
+            else if (methodCallExpression.Method.Name == "ToString" && methodCallExpression.Method.ReturnType == typeof(string) && methodCallExpression.Object == null)
             {
                 var constantValue = Expression.Lambda(methodCallExpression).Compile().DynamicInvoke();
                 return new ConstantExpressionNode(this, constantValue);
