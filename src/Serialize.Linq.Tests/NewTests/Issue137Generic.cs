@@ -15,8 +15,8 @@ namespace Serialize.Linq.Tests.NewTests
         [TestMethod]
         public void SerializeInnerFunction()
         {
-            SerializeInnerFunctionInternal(new XmlSerializer());
             SerializeInnerFunctionInternal(new BinarySerializer());
+            SerializeInnerFunctionInternal(new XmlSerializer());
             SerializeInnerFunctionInternal(new JsonSerializer());
         }
 

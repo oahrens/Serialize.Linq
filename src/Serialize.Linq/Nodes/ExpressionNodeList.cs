@@ -45,7 +45,7 @@ namespace Serialize.Linq.Nodes
 
         internal IEnumerable<ParameterExpression> GetParameterExpressions(IExpressionContext context)
         {
-            return this.OfType<ParameterExpressionNode>().Select(e => (ParameterExpression)e.ToExpression(context));
+            return this.Select(e => (ParameterExpression)e.ToExpression(context));
         }
     }
 }

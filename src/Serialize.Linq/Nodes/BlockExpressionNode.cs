@@ -1,19 +1,9 @@
 ﻿#if !WINDOWS_UWP
 using System;
 #endif
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Serialize.Linq.Interfaces;
-
-// Copyright, Sascha Kiefer (esskar)
-// Released under LGPL License.
-// 
-// License: https://raw.github.com/esskar/Serialize.Linq/master/LICENSE
-// Contributing: https://github.com/esskar/Serialize.Linq
-// 
-// modifiziert durch Olaf Ahrens
 
 namespace Serialize.Linq.Nodes
 {
@@ -27,7 +17,7 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public sealed class BlockExpressionNode : ExpressionNode<BlockExpression>
+    public class BlockExpressionNode : ExpressionNode<BlockExpression>
     {
         public BlockExpressionNode(INodeFactory factory, BlockExpression expression)
             : base(factory, expression) { }

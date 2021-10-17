@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Linq.Expressions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Serialize.Linq.Extensions;
 using Serialize.Linq.Serializers;
-using System;
-using System.Linq.Expressions;
 
 namespace Serialize.Linq.Tests.NewTests
 {
