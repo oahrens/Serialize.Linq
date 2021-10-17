@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Serialize.Linq.Factories;
 using Serialize.Linq.Interfaces;
 using Serialize.Linq.Nodes;
@@ -252,6 +253,24 @@ namespace Serialize.Linq.Extensions
                 case UnaryExpression unaryExpression:
                     yield return unaryExpression.Operand;
                     break;
+            }
+        }
+
+        /// <summary>
+        /// From https://stackoverflow.com/a/31360768/2883733.
+        /// </summary>
+        public static string GetDebugView(this Expression expression)
+        {
+            // ToDo: Funktion kompilieren
+            PropertyInfo info;
+
+            if (expression == null)
+                return null;
+            else
+            {
+                info = typeof(Expression).GetProperty("DebugView", BindingFlags.Instance | BindingFlags.NonPublic);
+
+                return info.GetValue(expression, null/* TODO Change to default(_) if this is not a reference type */) as string;
             }
         }
 
