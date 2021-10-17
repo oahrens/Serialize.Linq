@@ -82,5 +82,7 @@ namespace Serialize.Linq
         }
 
         protected abstract IEnumerable<Assembly> GetAssemblies();
+
+        public IList<LabelTarget> LabelTargets { get; } = new List<LabelTarget>();
     }
 }

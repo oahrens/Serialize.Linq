@@ -10,6 +10,7 @@
 using System;
 #endif
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Serialize.Linq.Interfaces;
 
@@ -25,7 +26,7 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class MemberExpressionNode : ExpressionNode<MemberExpression>
+    public class MemberExpressionNode<TMemberInfo> : ExpressionNode<MemberExpression> where TMemberInfo : MemberInfo
     {
         public MemberExpressionNode() { }
 
@@ -48,12 +49,11 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "M")]
 #endif
         #endregion
-        public MemberInfoNode Member { get; set; }
+        public MemberNode<TMemberInfo> Member { get; set; }
 
         protected override void Initialize(MemberExpression expression)
         {
             this.Expression = this.Factory.Create(expression.Expression);
-            this.Member = new MemberInfoNode(this.Factory, expression.Member);
         }
 
         public override Expression ToExpression(IExpressionContext context)

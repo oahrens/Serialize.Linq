@@ -39,5 +39,13 @@ namespace Serialize.Linq.Interfaces
         /// Gets binding flags to be used when accessing type members.
         /// </summary>
         BindingFlags? GetBindingFlags();
+
+        MemberInfoNode Create(MemberInfo member);
+
+        LabelTargetNode Create(LabelTarget target);
+
+        MemberNode<PropertyInfo> Create(PropertyInfo valMember);
+
+        MemberNode<FieldInfo> Create(FieldInfo valMember);
     }    
 }
