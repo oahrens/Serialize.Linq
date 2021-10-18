@@ -22,6 +22,8 @@ namespace Serialize.Linq
 
         private readonly IDictionary<string, Type> _typeCache = new Dictionary<string, Type>();
 
+        private readonly IDictionary<int, LabelTarget> _labelTargets = new Dictionary<int, LabelTarget>();
+
         protected ExpressionContextBase() { }
 
         protected ExpressionContextBase(bool allowPrivateFieldAccess)
@@ -56,6 +58,18 @@ namespace Serialize.Linq
             return nodeExpression;
         }
 
+        public LabelTarget GetLabelTarget(TypeNode type, string name, int id)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+            if (!_labelTargets.TryGetValue(id, out var target))
+            {
+                target = Expression.Label(type.ToType(this), name);
+                _labelTargets.Add(id, target);
+            }
+            return target;
+        }
+
         public virtual Type ResolveType(TypeNode node)
         {
             if (node == null)
@@ -82,7 +96,5 @@ namespace Serialize.Linq
         }
 
         protected abstract IEnumerable<Assembly> GetAssemblies();
-
-        public IList<LabelTarget> LabelTargets { get; } = new List<LabelTarget>();
     }
 }

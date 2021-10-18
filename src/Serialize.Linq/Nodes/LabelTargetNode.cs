@@ -42,16 +42,7 @@ namespace Serialize.Linq.Nodes
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
-
-            if (context.LabelTargets.Count > Id)
-            {
-                return context.LabelTargets[Id];
-            }
-            {
-                var target = Expression.Label(Type.ToType(context), LabelName);
-                context.LabelTargets.Add(target);
-                return target;
-            }
+            return context.GetLabelTarget(Type, LabelName, Id);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿#if !WINDOWS_UWP
 using System;
 #endif
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Serialize.Linq.Interfaces;
@@ -33,8 +34,8 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.Block(this.Variables.GetParameterExpressions(context),
-                                    this.Expressions.GetExpressions(context));
+            return Expression.Block(Variables.Cast<ParameterExpressionNode>().Select(node => context.GetParameterExpression(node)),
+                                    Expressions.GetExpressions(context));
         }
 
         protected override void Initialize(BlockExpression expression)
