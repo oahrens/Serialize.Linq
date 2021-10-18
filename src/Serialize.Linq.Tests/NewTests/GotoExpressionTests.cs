@@ -19,7 +19,7 @@ namespace Serialize.Linq.Tests.NewTests
 #pragma warning restore CS0618 // type or member is obsolete
 
             LabelTarget returnTarget = Expression.Label();
-            LabelTarget fakeTarget0 = Expression.Label("Label2");
+            LabelTarget fakeTarget0 = Expression.Label("#Label2");
             LabelTarget fakeTarget1 = Expression.Label();
             BlockExpression expression = Expression.Block(Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) }), Expression.Constant("GoTo")),
                                                           Expression.Goto(returnTarget),
@@ -49,7 +49,7 @@ namespace Serialize.Linq.Tests.NewTests
 #pragma warning restore CS0618 // type or member is obsolete
 
             LabelTarget returnTarget = Expression.Label();
-            LabelTarget fakeTarget0 = Expression.Label("Label2");
+            LabelTarget fakeTarget0 = Expression.Label("#Label2");
             LabelTarget fakeTarget1 = Expression.Label();
             BlockExpression expression = Expression.Block(Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) }), Expression.Constant("GoTo")),
                                                           Expression.Goto(returnTarget),
@@ -79,7 +79,7 @@ namespace Serialize.Linq.Tests.NewTests
 #pragma warning restore CS0618 // type or member is obsolete
 
             LabelTarget returnTarget = Expression.Label();
-            LabelTarget fakeTarget0 = Expression.Label("Label2");
+            LabelTarget fakeTarget0 = Expression.Label("#Label2");
             LabelTarget fakeTarget1 = Expression.Label();
             BlockExpression expression = Expression.Block(Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) }), Expression.Constant("GoTo")),
                                                           Expression.Goto(returnTarget),
