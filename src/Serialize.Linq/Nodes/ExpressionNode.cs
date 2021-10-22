@@ -26,7 +26,7 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public abstract class ExpressionNode : Node
+    public abstract class ExpressionNode : Node, IExpressionParameterNode<Expression>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionNode"/> class.
@@ -141,6 +141,11 @@ namespace Serialize.Linq.Nodes
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
             return conversionFunction(this, context);
+        }
+
+        public Expression ToParameter(IExpressionContext context)
+        { 
+            return ToExpression(context);
         }
 
         /// <summary>

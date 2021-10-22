@@ -32,7 +32,7 @@ namespace Serialize.Linq.Nodes
         public MemberListBindingNode(INodeFactory factory, MemberListBinding memberListBinding)
             : base(factory, memberListBinding.BindingType, memberListBinding.Member)
         {
-            this.Initializers = new ElementInitNodeList(this.Factory, memberListBinding.Initializers);
+            this.Initializers = new ExpressionParameterNodeList<ElementInit, ElementInitNode>(this.Factory, memberListBinding.Initializers);
         }
 
         #region DataMember
@@ -42,11 +42,11 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "I")]
 #endif
         #endregion
-        public ElementInitNodeList Initializers { get; set; }
+        public ExpressionParameterNodeList<ElementInit, ElementInitNode> Initializers { get; set; }
 
-        internal override MemberBinding ToMemberBinding(IExpressionContext context)
+        public override MemberBinding ToParameter(IExpressionContext context)
         {
-            return Expression.ListBind(this.Member.ToMemberInfo(context), this.Initializers.GetElementInits(context));
+            return Expression.ListBind(this.Member.ToParameter(context), this.Initializers.ToParameters(context));
         }
     }
 }

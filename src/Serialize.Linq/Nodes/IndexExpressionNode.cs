@@ -39,7 +39,7 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "A")]
 #endif
         #endregion
-        public ExpressionNodeList Arguments { get; set; }
+        public ExpressionParameterNodeList<Expression, ExpressionNode> Arguments { get; set; }
 
         #region DataMember
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
@@ -61,7 +61,7 @@ namespace Serialize.Linq.Nodes
 
         protected override void Initialize(IndexExpression expression)
         {
-            this.Arguments = new ExpressionNodeList(this.Factory, expression.Arguments);
+            this.Arguments = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, expression.Arguments);
             this.Indexer = new PropertyInfoNode(this.Factory, expression.Indexer);
             this.Object = this.Factory.Create(expression.Object);
         }
@@ -70,8 +70,8 @@ namespace Serialize.Linq.Nodes
         {
             return Expression.MakeIndex(
                 Object.ToExpression(context), 
-                Indexer.ToMemberInfo(context),
-                Arguments.GetExpressions(context));
+                Indexer.ToParameter(context),
+                Arguments.ToParameters(context));
         }
     }
 }

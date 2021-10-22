@@ -15,7 +15,7 @@ using Serialize.Linq.Interfaces;
 
 namespace Serialize.Linq.Nodes
 {
-    #region DataContract
+#region DataContract
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
     [DataContract]
 #else
@@ -24,7 +24,7 @@ namespace Serialize.Linq.Nodes
 #if !WINDOWS_UWP
     [Serializable]
 #endif
-    #endregion
+#endregion
     public class MemberAssignmentNode : MemberBindingNode
     {
         public MemberAssignmentNode() { }
@@ -35,18 +35,18 @@ namespace Serialize.Linq.Nodes
             this.Expression = this.Factory.Create(memberAssignment.Expression);
         }
 
-        #region DataMember
-        #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
+#region DataMember
+#if !SERIALIZE_LINQ_OPTIMIZE_SIZE
         [DataMember(EmitDefaultValue = false)]
 #else
         [DataMember(EmitDefaultValue = false, Name = "E")]
 #endif
-        #endregion
+#endregion
         public ExpressionNode Expression { get; set; }
 
-        internal override MemberBinding ToMemberBinding(IExpressionContext context)
+        public override MemberBinding ToParameter(IExpressionContext context)
         {
-            return System.Linq.Expressions.Expression.Bind(this.Member.ToMemberInfo(context), this.Expression.ToExpression(context));
+            return System.Linq.Expressions.Expression.Bind(this.Member.ToParameter(context), this.Expression.ToExpression(context));
         }
     }
 }

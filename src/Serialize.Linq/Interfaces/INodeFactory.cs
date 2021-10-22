@@ -17,11 +17,6 @@ namespace Serialize.Linq.Interfaces
     public interface INodeFactory
     {
         /// <summary>
-        /// Returns the factory settings for this instance
-        /// </summary>
-        FactorySettings Settings { get; }
-
-        /// <summary>
         /// Creates the specified expression node an expression.
         /// </summary>
         /// <param name="expression">The expression.</param>
@@ -35,17 +30,18 @@ namespace Serialize.Linq.Interfaces
         /// <returns></returns>
         TypeNode Create(Type type);
 
+        LabelTargetNode Create(LabelTarget target);
+
+        Node CreateParameterNode<TParameter>(TParameter valParameter) where TParameter : class;
+
+        /// <summary>
+        /// Returns the factory settings for this instance
+        /// </summary>
+        FactorySettings Settings { get; }
+
         /// <summary>
         /// Gets binding flags to be used when accessing type members.
         /// </summary>
         BindingFlags? GetBindingFlags();
-
-        MemberInfoNode Create(MemberInfo member);
-
-        LabelTargetNode Create(LabelTarget target);
-
-        MemberNode<PropertyInfo> Create(PropertyInfo valMember);
-
-        MemberNode<FieldInfo> Create(FieldInfo valMember);
     }    
 }

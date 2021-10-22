@@ -23,7 +23,7 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class ElementInitNode : Node
+    public class ElementInitNode : Node, IExpressionParameterNode<ElementInit>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementInitNode"/> class.
@@ -52,7 +52,7 @@ namespace Serialize.Linq.Nodes
                 throw new ArgumentNullException(nameof(elementInit));
 
             this.AddMethod = new MethodInfoNode(this.Factory, elementInit.AddMethod);
-            this.Arguments = new ExpressionNodeList(this.Factory, elementInit.Arguments);
+            this.Arguments = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, elementInit.Arguments);
         }
 
         #region DataMember
@@ -68,7 +68,7 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "A")]
 #endif
         #endregion
-        public ExpressionNodeList Arguments { get; set; }
+        public ExpressionParameterNodeList<Expression, ExpressionNode> Arguments { get; set; }
 
         #region DataMember
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
@@ -85,9 +85,9 @@ namespace Serialize.Linq.Nodes
         #endregion
         public MethodInfoNode AddMethod { get; set; }
 
-        internal ElementInit ToElementInit(IExpressionContext context)
+        public ElementInit ToParameter(IExpressionContext context)
         {
-            return Expression.ElementInit(this.AddMethod.ToMemberInfo(context), this.Arguments.GetExpressions(context));
+            return Expression.ElementInit(this.AddMethod.ToParameter(context), this.Arguments.ToParameters(context));
         }
     }
 }

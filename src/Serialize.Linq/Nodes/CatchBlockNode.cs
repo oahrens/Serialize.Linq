@@ -15,12 +15,11 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class CatchBlockNode 
-        : Node
+    public class CatchBlockNode : Node, IExpressionParameterNode<CatchBlock>
     {
         public CatchBlockNode() { }
 
-        public CatchBlockNode(INodeFactory factory, CatchBlock catchBlock) 
+        public CatchBlockNode(INodeFactory factory, CatchBlock catchBlock)
             : base(factory)
         {
             if (catchBlock == null)
@@ -44,12 +43,12 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false)]
         public ParameterExpressionNode Variable { get; set; }
 
-        public CatchBlock ToCatchBlock(IExpressionContext vcontext)
+        public CatchBlock ToParameter(IExpressionContext context)
         {
-            return Expression.MakeCatchBlock(Test?.ToType(vcontext), 
-                                             (ParameterExpression)Variable?.ToExpression(vcontext), 
-                                             Body?.ToExpression(vcontext), 
-                                             Filter?.ToExpression(vcontext));
+            return Expression.MakeCatchBlock(Test?.ToType(context),
+                                             (ParameterExpression)Variable?.ToExpression(context),
+                                             Body?.ToExpression(context),
+                                             Filter?.ToExpression(context));
         }
     }
 }

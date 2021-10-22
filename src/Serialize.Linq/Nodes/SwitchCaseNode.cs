@@ -15,18 +15,17 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class SwitchCaseNode 
-        : Node
+    public class SwitchCaseNode : Node, IExpressionParameterNode<SwitchCase>
     {
         public SwitchCaseNode() { }
 
-        public SwitchCaseNode(INodeFactory factory, SwitchCase switchCase) 
+        public SwitchCaseNode(INodeFactory factory, SwitchCase switchCase)
             : base(factory)
         {
             if (switchCase == null)
                 throw new ArgumentNullException(nameof(switchCase));
 
-            TestValues = new ExpressionNodeList(Factory, switchCase.TestValues);
+            TestValues = new ExpressionParameterNodeList<Expression, ExpressionNode>(Factory, switchCase.TestValues);
             Body = Factory.Create(switchCase.Body);
         }
 
@@ -34,11 +33,11 @@ namespace Serialize.Linq.Nodes
         public ExpressionNode Body { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public ExpressionNodeList TestValues { get; set; }
+        public ExpressionParameterNodeList<Expression, ExpressionNode> TestValues { get; set; }
 
-        public SwitchCase ToSwitchCase(IExpressionContext context)
+        public SwitchCase ToParameter(IExpressionContext context)
         {
-            return Expression.SwitchCase(Body.ToExpression(context), TestValues.GetExpressions(context));
+            return Expression.SwitchCase(Body.ToExpression(context), TestValues.ToParameters(context));
         }
     }
 }

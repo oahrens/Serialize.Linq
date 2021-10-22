@@ -39,7 +39,7 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "I")]
 #endif
         #endregion
-        public ElementInitNodeList Initializers { get; set; }
+        public ExpressionParameterNodeList<ElementInit, ElementInitNode> Initializers { get; set; }
 
         #region DataMember
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
@@ -52,13 +52,13 @@ namespace Serialize.Linq.Nodes
 
         protected override void Initialize(ListInitExpression expression)
         {
-            this.Initializers = new ElementInitNodeList(this.Factory, expression.Initializers);
+            this.Initializers = new ExpressionParameterNodeList<ElementInit, ElementInitNode>(this.Factory, expression.Initializers);
             this.NewExpression = this.Factory.Create(expression.NewExpression);
         }
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.ListInit((NewExpression)this.NewExpression.ToExpression(context), this.Initializers.GetElementInits(context));
+            return Expression.ListInit((NewExpression)this.NewExpression.ToExpression(context), this.Initializers.ToParameters(context));
         }
     }
 }

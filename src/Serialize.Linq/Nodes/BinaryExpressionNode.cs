@@ -141,14 +141,14 @@ namespace Serialize.Linq.Nodes
                     this.NodeType,
                     this.Left.ToExpression(context), this.Right.ToExpression(context),
                     this.IsLiftedToNull,
-                    this.Method.ToMemberInfo(context),
+                    this.Method.ToParameter(context),
                     conversion);
             if (this.Method != null)
                 return Expression.MakeBinary(
                     this.NodeType,
                     this.Left.ToExpression(context), this.Right.ToExpression(context),
                     this.IsLiftedToNull,
-                    this.Method.ToMemberInfo(context));
+                    this.Method.ToParameter(context));
             return Expression.MakeBinary(this.NodeType,
                     this.Left.ToExpression(context), this.Right.ToExpression(context));
         }

@@ -66,9 +66,15 @@ namespace Serialize.Linq.Nodes
             this.GenericArguments = memberInfo.GetGenericArguments().Select(a => this.Factory.Create(a)).ToArray();
         }
 
+        [Obsolete("This function is just for compatibility. Please use MethodInfoNode.ToParameter instead.", false)]
         public override MethodInfo ToMemberInfo(IExpressionContext context)
         {
-            var method = base.ToMemberInfo(context);
+            return ToParameter(context);
+        }
+
+        public override MethodInfo ToParameter(IExpressionContext context)
+        {
+            var method = base.ToParameter(context);
             if (method == null)
                 return null;
 

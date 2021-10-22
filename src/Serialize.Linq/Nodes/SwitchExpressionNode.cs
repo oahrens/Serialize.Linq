@@ -26,7 +26,7 @@ namespace Serialize.Linq.Nodes
             : base(factory, expression) { }
 
         [DataMember(EmitDefaultValue = false)]
-        public SwitchCaseNodeList Cases { get; set; }
+        public ExpressionParameterNodeList<SwitchCase, SwitchCaseNode> Cases { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public MethodInfoNode Comparison { get; set; }
@@ -42,13 +42,13 @@ namespace Serialize.Linq.Nodes
             return Expression.Switch(Type?.ToType(context),
                 SwitchValue.ToExpression(context),
                 DefaultBody?.ToExpression(context),
-                Comparison?.ToMemberInfo(context),
-                Cases.GetSwitchCases(context));
+                Comparison?.ToParameter(context),
+                Cases.ToParameters(context));
         }
 
         protected override void Initialize(SwitchExpression expression)
         {
-            this.Cases = new SwitchCaseNodeList(Factory, expression.Cases);
+            this.Cases = new ExpressionParameterNodeList<SwitchCase, SwitchCaseNode>(Factory, expression.Cases);
             this.Comparison = new MethodInfoNode(Factory, expression.Comparison);
             this.DefaultBody = Factory.Create(expression.DefaultBody);
             this.SwitchValue = Factory.Create(expression.SwitchValue);

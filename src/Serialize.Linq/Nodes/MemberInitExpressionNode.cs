@@ -39,7 +39,7 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "B")]
 #endif
         #endregion
-        public MemberBindingNodeList Bindings { get; set; }
+        public ExpressionParameterNodeList<MemberBinding, MemberBindingNode> Bindings { get; set; }
 
         #region DataMember
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
@@ -52,13 +52,13 @@ namespace Serialize.Linq.Nodes
 
         protected override void Initialize(MemberInitExpression expression)
         {
-            this.Bindings = new MemberBindingNodeList(this.Factory, expression.Bindings);
+            this.Bindings = new ExpressionParameterNodeList<MemberBinding, MemberBindingNode>(this.Factory, expression.Bindings);
             this.NewExpression = (NewExpressionNode)this.Factory.Create(expression.NewExpression);
         }
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.MemberInit((NewExpression)this.NewExpression.ToExpression(context), this.Bindings.GetMemberBindings(context));
+            return Expression.MemberInit((NewExpression)this.NewExpression.ToExpression(context), this.Bindings.ToParameters(context));
         }
     }
 }

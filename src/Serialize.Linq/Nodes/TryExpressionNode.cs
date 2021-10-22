@@ -35,7 +35,7 @@ namespace Serialize.Linq.Nodes
         public ExpressionNode Finally { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public CatchBlockNodeList Handlers { get; set; }
+        public ExpressionParameterNodeList<CatchBlock, CatchBlockNode> Handlers { get; set; }
 
         public override Expression ToExpression(IExpressionContext context)
         {
@@ -43,7 +43,7 @@ namespace Serialize.Linq.Nodes
                 Body?.ToExpression(context),
                 Finally?.ToExpression(context),
                 Fault?.ToExpression(context),
-                Handlers?.GetCatchBlocks(context));
+                Handlers?.ToParameters(context));
         }
 
         protected override void Initialize(TryExpression expression)
@@ -51,7 +51,7 @@ namespace Serialize.Linq.Nodes
             this.Body = Factory.Create(expression.Body);
             this.Fault = Factory.Create(expression.Fault);
             this.Finally = Factory.Create(expression.Finally);
-            this.Handlers = new CatchBlockNodeList(Factory, expression.Handlers);
+            this.Handlers = new ExpressionParameterNodeList<CatchBlock, CatchBlockNode>(Factory, expression.Handlers);
         }
     }
 }

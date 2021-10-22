@@ -11,6 +11,7 @@ using System;
 #endif
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Serialize.Linq.Interfaces;
 
@@ -40,7 +41,7 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "A")]
 #endif
         #endregion
-        public ExpressionNodeList Arguments { get; set; }
+        public ExpressionParameterNodeList<Expression, ExpressionNode> Arguments { get; set; }
 
         #region DataMember
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
@@ -58,13 +59,13 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "M")]
 #endif
         #endregion
-        public MemberInfoNodeList Members { get; set; }
+        public ExpressionParameterNodeList<MemberInfo, MemberInfoNode> Members { get; set; }
 
         protected override void Initialize(NewExpression expression)
         {
-            this.Arguments = new ExpressionNodeList(this.Factory, expression.Arguments);
+            this.Arguments = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, expression.Arguments);
             this.Constructor = new ConstructorInfoNode(this.Factory, expression.Constructor);
-            this.Members = new MemberInfoNodeList(this.Factory, expression.Members);
+            this.Members = new ExpressionParameterNodeList<MemberInfo, MemberInfoNode>(this.Factory, expression.Members);
         }
 
         public override Expression ToExpression(IExpressionContext context)
@@ -72,12 +73,12 @@ namespace Serialize.Linq.Nodes
             if (this.Constructor == null)
                 return Expression.New(this.Type.ToType(context));
 
-            var constructor = this.Constructor.ToMemberInfo(context);
+            var constructor = this.Constructor.ToParameter(context);
             if (constructor == null)
                 return Expression.New(this.Type.ToType(context));
 
-            var arguments = this.Arguments.GetExpressions(context);
-            var members = this.Members?.GetMembers(context).ToArray() ?? null;
+            var arguments = this.Arguments.ToParameters(context);
+            var members = this.Members?.ToParameters(context).ToArray() ?? null;
             return members != null && members.Length > 0 ? Expression.New(constructor, arguments, members) : Expression.New(constructor, arguments);
         }
     }

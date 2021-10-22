@@ -42,7 +42,6 @@ namespace Serialize.Linq.Nodes
     [KnownType(typeof(MemberAssignmentNode))]
     [KnownType(typeof(MemberBindingNode))]
     [KnownType(typeof(MemberInfoNode))]
-    [KnownType(typeof(MemberInfoNodeList))]    
     [KnownType(typeof(MemberInitExpressionNode))]
     [KnownType(typeof(MemberListBindingNode))]
     [KnownType(typeof(MemberMemberBindingNode))]

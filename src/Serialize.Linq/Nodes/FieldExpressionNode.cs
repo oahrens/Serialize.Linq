@@ -28,7 +28,7 @@ namespace Serialize.Linq.Nodes
         public FieldExpressionNode(INodeFactory factory, MemberExpression expression) 
             : base(factory, expression)
         {
-            base.Member = Factory.Create((FieldInfo)expression.Member);
+            base.Member = new FieldInfoNode(factory, (FieldInfo)expression.Member);
         }
     }
 }

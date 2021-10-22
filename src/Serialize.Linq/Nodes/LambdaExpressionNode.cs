@@ -12,7 +12,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using Serialize.Linq.Extensions;
 using Serialize.Linq.Interfaces;
 
 namespace Serialize.Linq.Nodes
@@ -50,14 +49,14 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "P")]
 #endif
         #endregion
-        public ExpressionNodeList Parameters { get; set; }
+        public ExpressionParameterNodeList<Expression, ExpressionNode> Parameters { get; set; }
 
         protected override void Initialize(LambdaExpression expression)
         {
 #if !WINDOWS_PHONE7
-            this.Parameters = new ExpressionNodeList(this.Factory, expression.Parameters);
+            this.Parameters = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, expression.Parameters);
 #else
-            this.Parameters = new ExpressionNodeList(this.Factory, expression.Parameters.Select(p => (Expression)p));
+            this.Parameters = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, expression.Parameters.Select(p => (Expression)p));
 #endif
             this.Body = this.Factory.Create(expression.Body);
         }
@@ -66,7 +65,7 @@ namespace Serialize.Linq.Nodes
         {
             return Expression.Lambda(Type.ToType(context), 
                                      Body.ToExpression(context), 
-                                     Parameters.Cast<ParameterExpressionNode>().Select(node => context.GetParameterExpression(node)));
+                                     Parameters.ToParameters(context).Cast<ParameterExpression>());
         }
     }
 }

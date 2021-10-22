@@ -92,21 +92,6 @@ namespace Serialize.Linq.Factories
             return new TypeNode(this, type);
         }
 
-        public virtual MemberInfoNode Create(MemberInfo member)
-        {
-            return new MemberInfoNode(this, member);
-        }
-
-        public MemberNode<PropertyInfo> Create(PropertyInfo valMember)
-        {
-            return new PropertyInfoNode(this, valMember);
-        }
-
-        public MemberNode<FieldInfo> Create(FieldInfo valMember)
-        {
-            return new FieldInfoNode(this, valMember);
-        }
-
         public virtual LabelTargetNode Create(LabelTarget target)
         {
 
@@ -122,6 +107,21 @@ namespace Serialize.Linq.Factories
                 }
                 return targetNode;
             }
+        }
+
+        public Node CreateParameterNode<TParameter>(TParameter parameter) where TParameter : class
+        {
+            if (parameter == null)
+                throw new ArgumentNullException(nameof(parameter));
+
+            if (parameter is CatchBlock catchBlock) return new CatchBlockNode(this, catchBlock);
+            if (parameter is SwitchCase switchCase) return new SwitchCaseNode(this, switchCase);
+            if (parameter is ElementInit elementInit) return new ElementInitNode(this, elementInit);
+            if (parameter is MemberInfo memberInfo) return new MemberInfoNode(this, memberInfo);
+            if (parameter is MemberBinding memberBinding) return MemberBindingNode.Create(this, memberBinding);
+            if (parameter is Expression expression) return Create(expression);
+
+            throw new ArgumentException($"Unknown expression of type {parameter.GetType()}");
         }
 
         /// <summary>

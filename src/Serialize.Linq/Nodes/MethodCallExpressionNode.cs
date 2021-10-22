@@ -39,7 +39,7 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "A")]
 #endif
         #endregion
-        public ExpressionNodeList Arguments { get; set; }
+        public ExpressionParameterNodeList<Expression, ExpressionNode> Arguments { get; set; }
 
         #region DataMember
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
@@ -61,7 +61,7 @@ namespace Serialize.Linq.Nodes
 
         protected override void Initialize(MethodCallExpression expression)
         {
-            this.Arguments = new ExpressionNodeList(this.Factory, expression.Arguments);
+            this.Arguments = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, expression.Arguments);
             this.Method = new MethodInfoNode(this.Factory, expression.Method);
             this.Object = this.Factory.Create(expression.Object);
         }
@@ -72,7 +72,7 @@ namespace Serialize.Linq.Nodes
             if (this.Object != null)
                 objectExpression = this.Object.ToExpression(context);
 
-            return Expression.Call(objectExpression, this.Method.ToMemberInfo(context), this.Arguments.GetExpressions(context));
+            return Expression.Call(objectExpression, this.Method.ToParameter(context), this.Arguments.ToParameters(context));
         }
     }
 }

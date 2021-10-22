@@ -33,7 +33,7 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.Label(Target.ToLabelTarget(context), DefaultValue?.ToExpression(context));
+            return Expression.Label(Target.ToParameter(context), DefaultValue?.ToExpression(context));
         }
 
         protected override void Initialize(LabelExpression expression)

@@ -36,7 +36,7 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.Loop(Body.ToExpression(context), BreakLabel?.ToLabelTarget(context), ContinueLabel?.ToLabelTarget(context));
+            return Expression.Loop(Body.ToExpression(context), BreakLabel?.ToParameter(context), ContinueLabel?.ToParameter(context));
         }
 
         protected override void Initialize(LoopExpression expression)

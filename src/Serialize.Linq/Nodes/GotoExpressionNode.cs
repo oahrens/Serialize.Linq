@@ -41,7 +41,7 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.MakeGoto(Kind, Target.ToLabelTarget(context), Value?.ToExpression(context), Type.ToType(context));
+            return Expression.MakeGoto(Kind, Target.ToParameter(context), Value?.ToExpression(context), Type.ToType(context));
         }
 
         protected override void Initialize(GotoExpression expression)

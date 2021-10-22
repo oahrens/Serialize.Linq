@@ -30,7 +30,7 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public abstract class MemberNode<TMemberInfo> : Node where TMemberInfo : MemberInfo
+    public abstract class MemberNode<TMemberInfo> : Node, IExpressionParameterNode<TMemberInfo> where TMemberInfo : MemberInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MemberNode{TMemberInfo}"/> class.
@@ -116,12 +116,18 @@ namespace Serialize.Linq.Nodes
         /// <returns></returns>
         protected abstract IEnumerable<TMemberInfo> GetMemberInfosForType(IExpressionContext context, Type type);
 
+        [Obsolete("This function is just for compatibility. Please use MemberNode.ToParameter instead.", false)]
+        public virtual TMemberInfo ToMemberInfo(IExpressionContext context)
+        {
+            return ToParameter(context);
+        }
+
         /// <summary>
         /// Converts this instance to a member info object of type TMemberInfo.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        public virtual TMemberInfo ToMemberInfo(IExpressionContext context)
+        public virtual TMemberInfo ToParameter(IExpressionContext context)
         {
             if (String.IsNullOrWhiteSpace(this.Signature))
                 return null;

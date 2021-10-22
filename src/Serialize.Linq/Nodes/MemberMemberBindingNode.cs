@@ -15,7 +15,7 @@ using Serialize.Linq.Interfaces;
 
 namespace Serialize.Linq.Nodes
 {
-    #region DataContract
+#region DataContract
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
     [DataContract]
 #else
@@ -24,7 +24,7 @@ namespace Serialize.Linq.Nodes
 #if !WINDOWS_UWP
     [Serializable]
 #endif
-    #endregion
+#endregion
     public class MemberMemberBindingNode : MemberBindingNode
     {
         public MemberMemberBindingNode() { }
@@ -32,21 +32,21 @@ namespace Serialize.Linq.Nodes
         public MemberMemberBindingNode(INodeFactory factory, MemberMemberBinding memberMemberBinding)
             : base(factory, memberMemberBinding.BindingType, memberMemberBinding.Member)
         {
-            this.Bindings = new MemberBindingNodeList(factory, memberMemberBinding.Bindings);
+            this.Bindings = new ExpressionParameterNodeList<MemberBinding, MemberBindingNode>(factory, memberMemberBinding.Bindings);
         }
 
-        #region DataMember
+#region DataMember
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
         [DataMember(EmitDefaultValue = false)]
 #else
         [DataMember(EmitDefaultValue = false, Name = "B")]
 #endif
-        #endregion
-        public MemberBindingNodeList Bindings { get; set; }
+#endregion
+        public ExpressionParameterNodeList<MemberBinding, MemberBindingNode> Bindings { get; set; }
 
-        internal override MemberBinding ToMemberBinding(IExpressionContext context)
+        public override MemberBinding ToParameter(IExpressionContext context)
         {
-            return Expression.MemberBind(this.Member.ToMemberInfo(context), this.Bindings.GetMemberBindings(context));
+            return Expression.MemberBind(this.Member.ToParameter(context), this.Bindings.ToParameters(context));
         }
     }
 }

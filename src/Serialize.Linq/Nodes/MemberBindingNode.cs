@@ -24,7 +24,7 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public abstract class MemberBindingNode : Node
+    public abstract class MemberBindingNode : Node, IExpressionParameterNode<MemberBinding>
     {
         protected MemberBindingNode() { }
 
@@ -56,7 +56,7 @@ namespace Serialize.Linq.Nodes
         #endregion
         public MemberInfoNode Member { get; set; }
 
-        internal abstract MemberBinding ToMemberBinding(IExpressionContext context);
+        public abstract MemberBinding ToParameter(IExpressionContext context);
 
         internal static MemberBindingNode Create(INodeFactory factory, MemberBinding memberBinding)
         {

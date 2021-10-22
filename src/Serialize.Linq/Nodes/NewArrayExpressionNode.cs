@@ -37,11 +37,11 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false, Name = "E")]
 #endif
         #endregion
-        public ExpressionNodeList Expressions { get; set; }
+        public ExpressionParameterNodeList<Expression, ExpressionNode> Expressions { get; set; }
 
         protected override void Initialize(NewArrayExpression expression)
         {
-            this.Expressions = new ExpressionNodeList(this.Factory, expression.Expressions);
+            this.Expressions = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, expression.Expressions);
         }
 
         public override Expression ToExpression(IExpressionContext context)
@@ -49,10 +49,10 @@ namespace Serialize.Linq.Nodes
             switch (this.NodeType)
             {
                 case ExpressionType.NewArrayBounds:
-                    return Expression.NewArrayBounds(this.Type.ToType(context).GetElementType(), this.Expressions.GetExpressions(context));
+                    return Expression.NewArrayBounds(this.Type.ToType(context).GetElementType(), this.Expressions.ToParameters(context));
 
                 case ExpressionType.NewArrayInit:
-                    return Expression.NewArrayInit(this.Type.ToType(context).GetElementType(), this.Expressions.GetExpressions(context));
+                    return Expression.NewArrayInit(this.Type.ToType(context).GetElementType(), this.Expressions.ToParameters(context));
 
                 default:
                     throw new InvalidOperationException("Unhandeled nody type: " + this.NodeType);

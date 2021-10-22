@@ -25,7 +25,7 @@ namespace Serialize.Linq.Nodes
         public PropertyExpressionNode(INodeFactory factory, MemberExpression expression) 
             : base(factory, expression)
         {
-            Member = Factory.Create((PropertyInfo)expression.Member);
+            base.Member = new PropertyInfoNode(factory, (PropertyInfo)expression.Member);
         }
     }
 }

@@ -15,8 +15,7 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class LabelTargetNode 
-        : Node
+    public class LabelTargetNode : Node, IExpressionParameterNode<LabelTarget>
     {
         public LabelTargetNode() { }
 
@@ -40,7 +39,7 @@ namespace Serialize.Linq.Nodes
         [DataMember(EmitDefaultValue = false)]
         public int Id { get; set; }
 
-        public LabelTarget ToLabelTarget(IExpressionContext context)
+        public LabelTarget ToParameter(IExpressionContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));

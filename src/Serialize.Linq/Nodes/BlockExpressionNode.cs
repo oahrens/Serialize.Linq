@@ -26,25 +26,25 @@ namespace Serialize.Linq.Nodes
             : base(factory, expression) { }
 
         [DataMember(EmitDefaultValue = false)]
-        public ExpressionNodeList Expressions { get; set; }
+        public ExpressionParameterNodeList<Expression, ExpressionNode> Expressions { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public ExpressionNode Result { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
-        public ExpressionNodeList Variables { get; set; }
+        public ExpressionParameterNodeList<Expression, ExpressionNode> Variables { get; set; }
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.Block(Variables.Cast<ParameterExpressionNode>().Select(node => context.GetParameterExpression(node)),
-                                    Expressions.GetExpressions(context));
+            return Expression.Block(Variables.ToParameters(context).Cast<ParameterExpression>(),
+                                    Expressions.ToParameters(context));
         }
 
         protected override void Initialize(BlockExpression expression)
         {
-            this.Expressions = new ExpressionNodeList(this.Factory, expression.Expressions);
+            this.Expressions = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, expression.Expressions);
             this.Result = Factory.Create(expression.Result);
-            this.Variables = new ExpressionNodeList(this.Factory, expression.Variables);
+            this.Variables = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, expression.Variables);
         }
     }
 }
