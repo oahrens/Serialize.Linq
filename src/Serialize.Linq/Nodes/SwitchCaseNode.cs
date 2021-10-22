@@ -18,6 +18,8 @@ namespace Serialize.Linq.Nodes
     public class SwitchCaseNode 
         : Node
     {
+        public SwitchCaseNode() { }
+
         public SwitchCaseNode(INodeFactory factory, SwitchCase switchCase) 
             : base(factory)
         {

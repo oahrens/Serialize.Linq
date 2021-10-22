@@ -20,6 +20,8 @@ namespace Serialize.Linq.Nodes
     public class LoopExpressionNode
         : ExpressionNode<LoopExpression>
     {
+        public LoopExpressionNode() { }
+
         public LoopExpressionNode(INodeFactory factory, LoopExpression expression)
             : base(factory, expression) { }
 

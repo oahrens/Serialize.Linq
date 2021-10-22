@@ -20,6 +20,8 @@ namespace Serialize.Linq.Nodes
     public class TryExpressionNode
         : ExpressionNode<TryExpression>
     {
+        public TryExpressionNode() { }
+
         public TryExpressionNode(INodeFactory factory, TryExpression expression)
             : base(factory, expression) { }
 

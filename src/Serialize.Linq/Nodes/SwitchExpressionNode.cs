@@ -20,6 +20,8 @@ namespace Serialize.Linq.Nodes
     public class SwitchExpressionNode
         : ExpressionNode<SwitchExpression>
     {
+        public SwitchExpressionNode() { }
+
         public SwitchExpressionNode(INodeFactory factory, SwitchExpression expression)
             : base(factory, expression) { }
 

@@ -20,6 +20,8 @@ namespace Serialize.Linq.Nodes
     public class LabelExpressionNode
         : ExpressionNode<LabelExpression>
     {
+        public LabelExpressionNode() { }
+
         public LabelExpressionNode(INodeFactory factory, LabelExpression expression)
             : base(factory, expression) { }
 

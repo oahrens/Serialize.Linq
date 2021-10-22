@@ -18,6 +18,8 @@ namespace Serialize.Linq.Nodes
     public class CatchBlockNode 
         : Node
     {
+        public CatchBlockNode() { }
+
         public CatchBlockNode(INodeFactory factory, CatchBlock catchBlock) 
             : base(factory)
         {

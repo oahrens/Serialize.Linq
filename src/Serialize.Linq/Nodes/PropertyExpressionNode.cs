@@ -20,6 +20,8 @@ namespace Serialize.Linq.Nodes
 #endregion
     public sealed class PropertyExpressionNode : MemberExpressionNode<PropertyInfo>
     {
+        public PropertyExpressionNode() { }
+
         public PropertyExpressionNode(INodeFactory factory, MemberExpression expression) 
             : base(factory, expression)
         {

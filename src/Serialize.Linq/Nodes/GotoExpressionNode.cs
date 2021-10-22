@@ -20,6 +20,8 @@ namespace Serialize.Linq.Nodes
     public class GotoExpressionNode
         : ExpressionNode<GotoExpression>
     {
+        public GotoExpressionNode() { }
+
         public GotoExpressionNode(INodeFactory factory, GotoExpression expression)
             : base(factory, expression.NodeType, expression.Target.Type)
         {

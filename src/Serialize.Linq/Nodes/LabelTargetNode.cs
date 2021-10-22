@@ -18,6 +18,8 @@ namespace Serialize.Linq.Nodes
     public class LabelTargetNode 
         : Node
     {
+        public LabelTargetNode() { }
+
         public LabelTargetNode(INodeFactory factory, LabelTarget target, int id, string defaultName)
             : base(factory)
         {

@@ -20,6 +20,8 @@ namespace Serialize.Linq.Nodes
     #endregion
     public class BlockExpressionNode : ExpressionNode<BlockExpression>
     {
+        public BlockExpressionNode() { }
+
         public BlockExpressionNode(INodeFactory factory, BlockExpression expression)
             : base(factory, expression) { }
 

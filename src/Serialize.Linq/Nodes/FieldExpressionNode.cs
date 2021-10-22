@@ -23,6 +23,8 @@ namespace Serialize.Linq.Nodes
 #endregion
     public class FieldExpressionNode : MemberExpressionNode<FieldInfo>
     {
+        public FieldExpressionNode() { }
+
         public FieldExpressionNode(INodeFactory factory, MemberExpression expression) 
             : base(factory, expression)
         {
