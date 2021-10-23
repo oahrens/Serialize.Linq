@@ -23,7 +23,7 @@ namespace Serialize.Linq.Nodes
         public GotoExpressionNode() { }
 
         public GotoExpressionNode(INodeFactory factory, GotoExpression expression)
-            : base(factory, expression.NodeType, expression.Target.Type)
+            : base(factory, expression)
         {
             this.Kind = expression.Kind;
             this.Target = Factory.Create(expression.Target);

@@ -77,7 +77,7 @@ namespace Serialize.Linq.Nodes
         /// <returns></returns>
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.Condition(this.Test.ToExpression(context), this.IfTrue.ToExpression(context), this.IfFalse.ToExpression(context));
+            return Expression.Condition(this.Test.ToExpression(context), this.IfTrue.ToExpression(context), this.IfFalse.ToExpression(context), Type.ToType(context));
         }
     }
 }
