@@ -13,7 +13,7 @@ namespace Serialize.Linq.Interfaces
 
         ParameterExpression GetParameterExpression(ParameterExpressionNode node);
 
-        LabelTarget GetLabelTarget(TypeNode type, string name, int id);
+        LabelTarget GetLabelTarget(LabelTargetNode node);
 
         Type ResolveType(TypeNode node);
     }

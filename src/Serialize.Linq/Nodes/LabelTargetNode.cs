@@ -25,13 +25,13 @@ namespace Serialize.Linq.Nodes
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
 
-            LabelName = String.IsNullOrEmpty(target.Name) ? defaultName : target.Name;
+            Name = String.IsNullOrEmpty(target.Name) ? defaultName : target.Name;
             Type = Factory.Create(target.Type);
             Id = id;
         }
 
         [DataMember(EmitDefaultValue = false)]
-        public string LabelName { get; set; }
+        public string Name { get; set; }
 
         [DataMember(EmitDefaultValue = false)]
         public TypeNode Type { get; set; }
@@ -43,7 +43,7 @@ namespace Serialize.Linq.Nodes
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
-            return context.GetLabelTarget(Type, LabelName, Id);
+            return context.GetLabelTarget(this);
         }
     }
 }

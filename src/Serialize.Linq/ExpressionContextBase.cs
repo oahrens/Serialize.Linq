@@ -17,12 +17,12 @@ namespace Serialize.Linq
 {
     public abstract class ExpressionContextBase : IExpressionContext
     {
-        private readonly IDictionary<ParameterExpressionNode, ParameterExpression> _parameterExpressions =
+        private readonly IDictionary<ParameterExpressionNode, ParameterExpression> _parameterExpressionCache =
             new Dictionary<ParameterExpressionNode, ParameterExpression>(new ParameterExpressionNodeComparer());
 
         private readonly IDictionary<string, Type> _typeCache = new Dictionary<string, Type>();
 
-        private readonly IDictionary<int, LabelTarget> _labelTargets = new Dictionary<int, LabelTarget>();
+        private readonly IDictionary<int, LabelTarget> _labelTargetCache = new Dictionary<int, LabelTarget>();
 
         protected ExpressionContextBase() { }
 
@@ -49,23 +49,23 @@ namespace Serialize.Linq
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-            if (!_parameterExpressions.TryGetValue(node, out var nodeExpression))
+            if (!_parameterExpressionCache.TryGetValue(node, out var nodeExpression))
             {
                 nodeExpression = Expression.Parameter(node.Type.ToType(this), node.Name);
-                _parameterExpressions.Add(node, nodeExpression);
+                _parameterExpressionCache.Add(node, nodeExpression);
             }
 
             return nodeExpression;
         }
 
-        public LabelTarget GetLabelTarget(TypeNode type, string name, int id)
+        public LabelTarget GetLabelTarget(LabelTargetNode node)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (!_labelTargets.TryGetValue(id, out var target))
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
+            if (!_labelTargetCache.TryGetValue(node.Id, out var target))
             {
-                target = Expression.Label(type.ToType(this), name);
-                _labelTargets.Add(id, target);
+                target = Expression.Label(node.Type.ToType(this), node.Name);
+                _labelTargetCache.Add(node.Id, target);
             }
             return target;
         }
