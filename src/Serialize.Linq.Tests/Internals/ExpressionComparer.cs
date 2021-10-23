@@ -7,8 +7,10 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Serialize.Linq.Tests.Internals
 {
@@ -16,7 +18,7 @@ namespace Serialize.Linq.Tests.Internals
     {
         public virtual bool AreEqual(Expression x, Expression y)
         {
-            if (object.ReferenceEquals(x, y))
+            if (Object.ReferenceEquals(x, y))
                 return true;
             if (x.NodeType != y.NodeType)
                 return false;
@@ -32,6 +34,11 @@ namespace Serialize.Linq.Tests.Internals
                 case ExpressionType.Quote:
                 case ExpressionType.TypeAs:
                 case ExpressionType.UnaryPlus:
+                case ExpressionType.PreDecrementAssign:
+                case ExpressionType.PreIncrementAssign:
+                case ExpressionType.PostDecrementAssign:
+                case ExpressionType.PostIncrementAssign:
+                case ExpressionType.Throw:
                     return this.AreEqualUnary((UnaryExpression)x, (UnaryExpression)y);
                 case ExpressionType.Add:
                 case ExpressionType.AddAssign:
@@ -41,7 +48,7 @@ namespace Serialize.Linq.Tests.Internals
                 case ExpressionType.Subtract:
                 case ExpressionType.SubtractAssign:
                 case ExpressionType.SubtractAssignChecked:
-                case ExpressionType.SubtractChecked:                
+                case ExpressionType.SubtractChecked:
                 case ExpressionType.Multiply:
                 case ExpressionType.MultiplyAssign:
                 case ExpressionType.MultiplyAssignChecked:
@@ -65,6 +72,7 @@ namespace Serialize.Linq.Tests.Internals
                 case ExpressionType.RightShift:
                 case ExpressionType.LeftShift:
                 case ExpressionType.ExclusiveOr:
+                case ExpressionType.Power:
                     return this.AreEqualBinary((BinaryExpression)x, (BinaryExpression)y);
                 case ExpressionType.TypeIs:
                 case ExpressionType.TypeEqual:
@@ -92,8 +100,20 @@ namespace Serialize.Linq.Tests.Internals
                     return this.AreEqualMemberInit((MemberInitExpression)x, (MemberInitExpression)y);
                 case ExpressionType.ListInit:
                     return this.AreEqualListInit((ListInitExpression)x, (ListInitExpression)y);
+                case ExpressionType.Block:
+                    return this.AreEqualBlock((BlockExpression)x, (BlockExpression)y);
+                case ExpressionType.Goto:
+                    return this.AreEqualGoto((GotoExpression)x, (GotoExpression)y);
+                case ExpressionType.Label:
+                    return this.AreEqualLabel((LabelExpression)x, (LabelExpression)y);
+                case ExpressionType.Loop:
+                    return this.AreEqualLoop((LoopExpression)x, (LoopExpression)y);
+                case ExpressionType.Switch:
+                    return this.AreEqualSwitch((SwitchExpression)x, (SwitchExpression)y);
+                case ExpressionType.Try:
+                    return this.AreEqualTry((TryExpression)x, (TryExpression)y);
                 default:
-                    throw new Exception(string.Format("Unhandled expression type: '{0}'", x.NodeType));
+                    throw new Exception(String.Format("Unhandled expression type: '{0}'", x.NodeType));
             }
         }
 
@@ -111,13 +131,19 @@ namespace Serialize.Linq.Tests.Internals
                 case MemberBindingType.ListBinding:
                     return this.AreEqualMemberListBinding((MemberListBinding)x, (MemberListBinding)y);
                 default:
-                    throw new Exception(string.Format("Unhandled binding type '{0}'", y.BindingType));
+                    throw new Exception(String.Format("Unhandled binding type '{0}'", y.BindingType));
             }
         }
 
         protected virtual bool AreEqualElementInitializer(ElementInit x, ElementInit y)
         {
             return this.AreEqualExpressionList(x.Arguments, y.Arguments);
+        }
+
+        protected virtual bool AreEqualLabelTarget(LabelTarget x, LabelTarget y)
+        {
+            return x == y
+                || x.Type == y.Type;
         }
 
         protected virtual bool AreEqualUnary(UnaryExpression x, UnaryExpression y)
@@ -134,15 +160,25 @@ namespace Serialize.Linq.Tests.Internals
 
         protected virtual bool AreEqualTypeBinary(TypeBinaryExpression x, TypeBinaryExpression y)
         {
-            return x.NodeType == y.NodeType 
-                && x.TypeOperand == y.TypeOperand
+            return x.TypeOperand == y.TypeOperand
                 && this.AreEqual(x.Expression, y.Expression);
         }
 
         protected virtual bool AreEqualConstant(ConstantExpression x, ConstantExpression y)
         {
             return x.Type == y.Type
-                && (object.ReferenceEquals(x.Value, y.Value) || x.Value.Equals(y.Value));
+                && (Object.ReferenceEquals(x.Value, y.Value) 
+                    || x.Value.Equals(y.Value) 
+                    || PublicInstancePropertiesEqual(x.Value, y.Value));
+        }
+
+        protected virtual bool AreEqualMethodInfo(MethodInfo x, MethodInfo y)
+        {
+            return x == y
+                || (x.Name == y.Name
+                    && x.Attributes == y.Attributes
+                    && x.DeclaringType == y.DeclaringType
+                    && x.ReturnType == y.ReturnType);
         }
 
         protected virtual bool AreEqualConditional(ConditionalExpression x, ConditionalExpression y)
@@ -154,8 +190,9 @@ namespace Serialize.Linq.Tests.Internals
 
         protected virtual bool AreEqualParameter(ParameterExpression x, ParameterExpression y)
         {
-            return x.Type == y.Type
-                && (object.ReferenceEquals(x.Name, y.Name) || x.Name.Equals(y.Name));
+            return x == y
+                || (x.Type == y.Type
+                    && (Object.ReferenceEquals(x.Name, y.Name) || x.Name.Equals(y.Name)));
         }
 
         protected virtual bool AreEqualMemberAccess(MemberExpression x, MemberExpression y)
@@ -176,6 +213,35 @@ namespace Serialize.Linq.Tests.Internals
             for (var i = 0; isEqual && i < x.Count; ++i)
                 isEqual = this.AreEqual(x[i], y[i]);
             return isEqual;
+        }
+
+        protected virtual bool AreEqualCaseList(ReadOnlyCollection<SwitchCase> x, ReadOnlyCollection<SwitchCase> y)
+        {
+            var isEqual = x.Count.Equals(y.Count);
+            for (var i = 0; isEqual && i < x.Count; ++i)
+                isEqual = this.AreEqualCase(x[i], y[i]);
+            return isEqual;
+        }
+
+        protected virtual bool AreEqualCase(SwitchCase x, SwitchCase y)
+        {
+            return this.AreEqual(x.Body, y.Body)
+                && this.AreEqualExpressionList(x.TestValues, y.TestValues);
+        }
+
+        protected virtual bool AreEqualCatchBlockList(ReadOnlyCollection<CatchBlock> x, ReadOnlyCollection<CatchBlock> y)
+        {
+            var isEqual = x.Count.Equals(y.Count);
+            for (var i = 0; isEqual && i < x.Count; ++i)
+                isEqual = this.AreEqualCatchBlock(x[i], y[i]);
+            return isEqual;
+        }
+
+        protected virtual bool AreEqualCatchBlock(CatchBlock x, CatchBlock y)
+        {
+            return this.AreEqual(x.Body, y.Body)
+                && this.AreEqualParameter(x.Variable, y.Variable)
+                && this.AreEqual(x.Filter, y.Filter);
         }
 
         protected virtual bool AreEqualMemberAssignment(MemberAssignment x, MemberAssignment y)
@@ -209,9 +275,18 @@ namespace Serialize.Linq.Tests.Internals
             return isEqual;
         }
 
+        protected virtual bool AreEqualParameterList(ReadOnlyCollection<ParameterExpression> x, ReadOnlyCollection<ParameterExpression> y)
+        {
+            var isEqual = x.Count.Equals(y.Count);
+            for (var i = 0; isEqual && i < x.Count; ++i)
+                isEqual = this.AreEqualParameter(x[i], y[i]);
+            return isEqual;
+        }
+
         protected virtual bool AreEqualLambda(LambdaExpression x, LambdaExpression y)
         {
-            return this.AreEqual(x.Body, y.Body);
+            return this.AreEqual(x.Body, y.Body)
+                && this.AreEqualParameterList(x.Parameters, y.Parameters);
         }
 
         protected virtual bool AreEqualNew(NewExpression x, NewExpression y)
@@ -231,6 +306,54 @@ namespace Serialize.Linq.Tests.Internals
                 && this.AreEqualElementInitializerList(x.Initializers, y.Initializers);
         }
 
+        protected virtual bool AreEqualBlock(BlockExpression x, BlockExpression y)
+        {
+            return x.Type == y.Type
+                && this.AreEqualExpressionList(x.Expressions, y.Expressions)
+                && this.AreEqualParameterList(x.Variables, y.Variables)
+                && this.AreEqual(x.Result, y.Result);
+        }
+
+        protected virtual bool AreEqualGoto(GotoExpression x, GotoExpression y)
+        {
+            return x.Type == y.Type
+                && x.Kind == y.Kind
+                && this.AreEqualLabelTarget(x.Target, y.Target)
+                && this.AreEqual(x.Value, y.Value);
+        }
+
+        protected virtual bool AreEqualLabel(LabelExpression x, LabelExpression y)
+        {
+            return x == y
+                || (x.Type == y.Type
+                    && this.AreEqualLabelTarget(x.Target, y.Target));
+        }
+
+        protected virtual bool AreEqualLoop(LoopExpression x, LoopExpression y)
+        {
+            return x.Type == y.Type
+                && this.AreEqualLabelTarget(x.ContinueLabel, y.ContinueLabel)
+                && this.AreEqualLabelTarget(x.BreakLabel, y.BreakLabel)
+                && this.AreEqual(x.Body, y.Body);
+        }
+
+        protected virtual bool AreEqualSwitch(SwitchExpression x, SwitchExpression y)
+        {
+            return x.Type == y.Type
+                && this.AreEqualMethodInfo(x.Comparison, y.Comparison)
+                && this.AreEqual(x.DefaultBody, y.DefaultBody)
+                && this.AreEqual(x.SwitchValue, y.SwitchValue)
+                && this.AreEqualCaseList(x.Cases, y.Cases);
+        }
+
+        protected virtual bool AreEqualTry(TryExpression x, TryExpression y)
+        {
+            return x.Type == y.Type
+                && this.AreEqualCatchBlockList(x.Handlers, y.Handlers)
+                && this.AreEqual(x.Body, y.Body)
+                && this.AreEqual(x.Finally, y.Finally);
+        }
+
         protected virtual bool AreEqualNewArray(NewArrayExpression x, NewArrayExpression y)
         {
             return this.AreEqualExpressionList(x.Expressions, y.Expressions);
@@ -240,6 +363,38 @@ namespace Serialize.Linq.Tests.Internals
         {
             return this.AreEqualExpressionList(x.Arguments, y.Arguments)
                 && this.AreEqual(x.Expression, y.Expression);
-        }        
+        }
+
+        /// <summary>
+        /// From: https://stackoverflow.com/questions/506096/comparing-object-properties-in-c-sharp.
+        /// </summary>
+        private static bool PublicInstancePropertiesEqual<T>(T val0, T val1, ICollection<string> ignoredNames = null) where T : class
+        {
+            Type type;
+            object value0;
+            object value1;
+            if (val0 is object && val1 is object)
+            {
+                type = val0.GetType();
+                foreach (var tmpInfo in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (ignoredNames?.Contains(tmpInfo.Name) == false)
+                    {
+                        value0 = type.GetProperty(tmpInfo.Name).GetValue(val0, null);
+                        value1 = type.GetProperty(tmpInfo.Name).GetValue(val1, null);
+                        if (tmpInfo.PropertyType.IsClass && !tmpInfo.PropertyType.Module.ScopeName.Equals("CommonLanguageRuntimeLibrary", StringComparison.OrdinalIgnoreCase) && !PublicInstancePropertiesEqual(value0, value1, ignoredNames) || !ReferenceEquals(value0, value1) && (value0 is null || !value0.Equals(value1)))
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return ReferenceEquals(val0, val1);
+            }
+        }
     }
 }
