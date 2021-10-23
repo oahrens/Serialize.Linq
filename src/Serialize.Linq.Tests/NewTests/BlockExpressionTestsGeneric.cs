@@ -3,8 +3,10 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Serialize.Linq.Extensions;
 using Serialize.Linq.Interfaces;
 using Serialize.Linq.Serializers;
+using Serialize.Linq.Tests.Internals;
 
 namespace Serialize.Linq.Tests.NewTests
 {
@@ -39,7 +41,9 @@ namespace Serialize.Linq.Tests.NewTests
             var value = serializer.SerializeGeneric(expression);
             var actualExpression = (Expression<Func<StackTrace, string>>)serializer.DeserializeGeneric(value, new ExpressionContext(true));
 
-            Assert.AreEqual(expression.ToString(), actualExpression.ToString());
+            Assert.AreEqual(expression.GetDebugView(), actualExpression.GetDebugView());
+            var comparer = new ExpressionComparer();
+            Assert.IsTrue(comparer.AreEqual(expression, actualExpression));
 
             var stack = expression.Compile().Invoke(new StackTrace());
             var actualStack = actualExpression.Compile().Invoke(new StackTrace());

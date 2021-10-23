@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Serialize.Linq.Extensions;
 using Serialize.Linq.Interfaces;
 using Serialize.Linq.Serializers;
+using Serialize.Linq.Tests.Internals;
 
 namespace Serialize.Linq.Tests.NewTests
 {
@@ -30,10 +32,14 @@ namespace Serialize.Linq.Tests.NewTests
 
             var value = serializer.SerializeGeneric(combinedExpression);
             var actualExpression = (Expression<Func<int, string>>)serializer.DeserializeGeneric(value);
+
+            Assert.AreEqual(combinedExpression.GetDebugView(), actualExpression.GetDebugView());
+            var comparer = new ExpressionComparer();
+            Assert.IsTrue(comparer.AreEqual(combinedExpression, actualExpression));
+
             var func = combinedExpression.Compile();
             var actualFunc = actualExpression.Compile();
 
-            Assert.AreEqual(combinedExpression.ToString(), actualExpression.ToString());
             Assert.AreEqual(func(42), "42");
             Assert.AreEqual(actualFunc(42), "42");
         }

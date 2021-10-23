@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Serialize.Linq.Extensions;
 using Serialize.Linq.Interfaces;
 using Serialize.Linq.Serializers;
+using Serialize.Linq.Tests.Internals;
 
 namespace Serialize.Linq.Tests.NewTests
 {
@@ -41,6 +42,8 @@ namespace Serialize.Linq.Tests.NewTests
             var actualExpression = (Expression<Func<int, int>>)serializer.DeserializeGeneric(value);
 
             Assert.AreEqual(expression.GetDebugView(), actualExpression.GetDebugView());
+            var comparer = new ExpressionComparer();
+            Assert.IsTrue(comparer.AreEqual(expression, actualExpression));
 
             var func = expression.Compile();
             var actualFunc = actualExpression.Compile();
