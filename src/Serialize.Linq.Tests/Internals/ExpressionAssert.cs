@@ -6,6 +6,7 @@
 //  Contributing: https://github.com/esskar/Serialize.Linq
 #endregion
 
+using System;
 using System.Linq.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -25,8 +26,8 @@ namespace Serialize.Linq.Tests.Internals
             if (result) 
                 return;
 
-            var failMessage = !string.IsNullOrWhiteSpace(message) ? message : string.Empty;
-            failMessage += string.Format("Expected was <{0}>, Actual was <{1}>", expected, actual);
+            var failMessage = !String.IsNullOrWhiteSpace(message) ? message : String.Empty;
+            failMessage += String.Format("Expected was <{0}>, Actual was <{1}>", expected, actual);
             Assert.Fail(failMessage);
         }
     }

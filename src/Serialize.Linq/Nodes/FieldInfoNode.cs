@@ -14,9 +14,6 @@ using Serialize.Linq.Interfaces;
 
 namespace Serialize.Linq.Nodes
 {
-    /// <summary>
-    /// ToDo: not in use!
-    /// </summary>
     #region DataContract
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
     [DataContract]

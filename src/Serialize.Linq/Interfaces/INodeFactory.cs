@@ -32,7 +32,7 @@ namespace Serialize.Linq.Interfaces
 
         LabelTargetNode Create(LabelTarget target);
 
-        Node CreateParameterNode<TParameter>(TParameter valParameter) where TParameter : class;
+        Node CreateParameterNode<TParameter>(TParameter parameter) where TParameter : class;
 
         /// <summary>
         /// Returns the factory settings for this instance
