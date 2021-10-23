@@ -22,6 +22,8 @@ namespace Serialize.Linq.Extensions
     /// </summary>
     public static class ExpressionExtensions
     {
+        private readonly static Func<Expression, string> _debugViewFunc = GetDebugViewFunc();
+
         /// <summary>
         /// Converts an expression to an expression node.
         /// </summary>
@@ -186,22 +188,20 @@ namespace Serialize.Linq.Extensions
             return new NodeFactory(factorySettings);
         }
 
+        public static string GetDebugView(this Expression expression)
+        {
+            return _debugViewFunc.Invoke(expression);
+        }
+
         /// <summary>
         /// From https://stackoverflow.com/a/31360768/2883733.
         /// </summary>
-        public static string GetDebugView(this Expression expression)
+        private static Func<Expression, string> GetDebugViewFunc()
         {
-            // ToDo: Funktion kompilieren
-            PropertyInfo info;
-
-            if (expression == null)
-                return null;
-            else
-            {
-                info = typeof(Expression).GetProperty("DebugView", BindingFlags.Instance | BindingFlags.NonPublic);
-
-                return info.GetValue(expression, null/* TODO Change to default(_) if this is not a reference type */) as string;
-            }
+            Expression<Func<Expression, string>> expression = e => e == null ? 
+                                                                   null : 
+                                                                   typeof(Expression).GetProperty("DebugView", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(e, null) as string;
+            return expression.Compile();
         }
     }
 }
