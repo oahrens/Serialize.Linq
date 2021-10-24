@@ -2,6 +2,7 @@
 using System;
 #endif
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Serialize.Linq.Interfaces;
 
@@ -40,10 +41,10 @@ namespace Serialize.Linq.Nodes
         public override Expression ToExpression(IExpressionContext context)
         {
             return Expression.Switch(Type?.ToType(context),
-                SwitchValue.ToExpression(context),
-                DefaultBody?.ToExpression(context),
-                Comparison?.ToParameter(context),
-                Cases.ToParameters(context));
+                                     SwitchValue.ToExpression(context),
+                                     DefaultBody?.ToExpression(context),
+                                     (MethodInfo)Comparison?.ToParameter(context),
+                                     Cases.ToParameters(context));
         }
 
         protected override void Initialize(SwitchExpression expression)

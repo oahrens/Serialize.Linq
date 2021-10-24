@@ -8,6 +8,7 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Serialize.Linq.Interfaces;
 
@@ -87,7 +88,8 @@ namespace Serialize.Linq.Nodes
 
         public ElementInit ToParameter(IExpressionContext context)
         {
-            return Expression.ElementInit(this.AddMethod.ToParameter(context), this.Arguments.ToParameters(context));
+            return Expression.ElementInit((MethodInfo)this.AddMethod.ToParameter(context), 
+                                          this.Arguments.ToParameters(context));
         }
     }
 }

@@ -32,14 +32,14 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class PropertyInfoNode : MemberNode<PropertyInfo>
+    public class PropertyInfoNode : MemberInfoNode
     {
         public PropertyInfoNode() { }
 
         public PropertyInfoNode(INodeFactory factory, PropertyInfo memberInfo) 
             : base(factory, memberInfo) { }
 
-        protected override IEnumerable<PropertyInfo> GetMemberInfosForType(IExpressionContext context, Type type)
+        protected override IEnumerable<MemberInfo> GetMemberInfosForType(IExpressionContext context, Type type)
         {
             return type.GetProperties(context?.BindingFlags ?? Factory.Settings.BindingFlags);
         }

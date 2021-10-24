@@ -10,6 +10,7 @@
 using System;
 #endif
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Serialize.Linq.Interfaces;
 
@@ -68,10 +69,9 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.MakeIndex(
-                Object.ToExpression(context), 
-                Indexer.ToParameter(context),
-                Arguments.ToParameters(context));
+            return Expression.MakeIndex(Object.ToExpression(context),
+                                        (PropertyInfo)Indexer.ToParameter(context),
+                                        Arguments.ToParameters(context));
         }
     }
 }

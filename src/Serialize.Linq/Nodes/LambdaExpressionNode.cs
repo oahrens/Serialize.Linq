@@ -51,6 +51,24 @@ namespace Serialize.Linq.Nodes
         #endregion
         public ExpressionParameterNodeList<Expression, ExpressionNode> Parameters { get; set; }
 
+        #region DataMember
+#if !SERIALIZE_LINQ_OPTIMIZE_SIZE
+        [DataMember(EmitDefaultValue = false)]
+#else
+        [DataMember(EmitDefaultValue = false, Name = "TC")]
+#endif
+        #endregion
+        public bool TailCall { get; set; }
+
+        #region DataMember
+#if !SERIALIZE_LINQ_OPTIMIZE_SIZE
+        [DataMember(EmitDefaultValue = false)]
+#else
+        [DataMember(EmitDefaultValue = false, Name = "N")]
+#endif
+        #endregion
+        public string Name { get; set; }
+
         protected override void Initialize(LambdaExpression expression)
         {
 #if !WINDOWS_PHONE7
@@ -59,12 +77,16 @@ namespace Serialize.Linq.Nodes
             this.Parameters = new ExpressionParameterNodeList<Expression, ExpressionNode>(this.Factory, expression.Parameters.Select(p => (Expression)p));
 #endif
             this.Body = this.Factory.Create(expression.Body);
+            this.TailCall = expression.TailCall;
+            this.Name = expression.Name;
         }
 
         public override Expression ToExpression(IExpressionContext context)
         {
             return Expression.Lambda(Type.ToType(context), 
                                      Body.ToExpression(context), 
+                                     Name,
+                                     TailCall,
                                      Parameters.ToParameters(context).Cast<ParameterExpression>());
         }
     }

@@ -10,6 +10,7 @@
 using System;
 #endif
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Serialize.Linq.Interfaces;
 
@@ -141,14 +142,14 @@ namespace Serialize.Linq.Nodes
                     this.NodeType,
                     this.Left.ToExpression(context), this.Right.ToExpression(context),
                     this.IsLiftedToNull,
-                    this.Method.ToParameter(context),
+                    (MethodInfo)this.Method.ToParameter(context),
                     conversion);
             if (this.Method != null)
                 return Expression.MakeBinary(
                     this.NodeType,
                     this.Left.ToExpression(context), this.Right.ToExpression(context),
                     this.IsLiftedToNull,
-                    this.Method.ToParameter(context));
+                    (MethodInfo)this.Method.ToParameter(context));
             return Expression.MakeBinary(this.NodeType,
                     this.Left.ToExpression(context), this.Right.ToExpression(context));
         }

@@ -45,7 +45,7 @@ namespace Serialize.Linq.Nodes
 
         public CatchBlock ToParameter(IExpressionContext context)
         {
-            return Expression.MakeCatchBlock(Test?.ToType(context),
+            return Expression.MakeCatchBlock(Test.ToType(context),
                                              (ParameterExpression)Variable?.ToExpression(context),
                                              Body?.ToExpression(context),
                                              Filter?.ToExpression(context));

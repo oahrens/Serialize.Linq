@@ -24,14 +24,14 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class FieldInfoNode : MemberNode<FieldInfo>
+    public class FieldInfoNode : MemberInfoNode
     {
         public FieldInfoNode() { }
 
         public FieldInfoNode(INodeFactory factory, FieldInfo memberInfo)
             : base(factory, memberInfo) { }
 
-        protected override IEnumerable<FieldInfo> GetMemberInfosForType(IExpressionContext context, Type type)
+        protected override IEnumerable<MemberInfo> GetMemberInfosForType(IExpressionContext context, Type type)
         {
             return type.GetFields(context?.BindingFlags ?? Factory.Settings.BindingFlags);
         }

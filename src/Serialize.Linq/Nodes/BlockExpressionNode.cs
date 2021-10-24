@@ -36,7 +36,8 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.Block(Variables.ToParameters(context).Cast<ParameterExpression>(),
+            return Expression.Block(Type.ToType(context),
+                                    Variables.ToParameters(context).Cast<ParameterExpression>(),
                                     Expressions.ToParameters(context));
         }
 

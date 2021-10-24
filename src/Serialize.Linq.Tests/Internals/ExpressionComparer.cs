@@ -39,6 +39,8 @@ namespace Serialize.Linq.Tests.Internals
                 case ExpressionType.PostDecrementAssign:
                 case ExpressionType.PostIncrementAssign:
                 case ExpressionType.Throw:
+                case ExpressionType.Decrement:
+                case ExpressionType.Increment:
                     return this.AreEqualUnary((UnaryExpression)x, (UnaryExpression)y);
                 case ExpressionType.Add:
                 case ExpressionType.AddAssign:
@@ -73,6 +75,12 @@ namespace Serialize.Linq.Tests.Internals
                 case ExpressionType.LeftShift:
                 case ExpressionType.ExclusiveOr:
                 case ExpressionType.Power:
+                case ExpressionType.AndAssign:
+                case ExpressionType.ExclusiveOrAssign:
+                case ExpressionType.LeftShiftAssign:
+                case ExpressionType.OrAssign:
+                case ExpressionType.PowerAssign:
+                case ExpressionType.RightShiftAssign:
                     return this.AreEqualBinary((BinaryExpression)x, (BinaryExpression)y);
                 case ExpressionType.TypeIs:
                 case ExpressionType.TypeEqual:

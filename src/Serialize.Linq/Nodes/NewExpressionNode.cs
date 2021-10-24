@@ -73,7 +73,7 @@ namespace Serialize.Linq.Nodes
             if (this.Constructor == null)
                 return Expression.New(this.Type.ToType(context));
 
-            var constructor = this.Constructor.ToParameter(context);
+            var constructor = (ConstructorInfo)this.Constructor.ToParameter(context);
             if (constructor == null)
                 return Expression.New(this.Type.ToType(context));
 

@@ -62,13 +62,7 @@ namespace Serialize.Linq.Factories
             if (expression is LambdaExpression lambdaExpression) return new LambdaExpressionNode(this, lambdaExpression);
             if (expression is ListInitExpression listInitExpression) return new ListInitExpressionNode(this, listInitExpression);
             if (expression is LoopExpression loopExpression) return new LoopExpressionNode(this, loopExpression);
-            if (expression is MemberExpression memberExpression)
-            {
-                if (memberExpression.Member is FieldInfo)
-                    return new FieldExpressionNode(this, memberExpression);
-                else
-                    return new PropertyExpressionNode(this, memberExpression);
-            }
+            if (expression is MemberExpression memberExpression) return new MemberExpressionNode(this, memberExpression);
             if (expression is MemberInitExpression memberInitExpression) return new MemberInitExpressionNode(this, memberInitExpression);
             if (expression is MethodCallExpression methodCallExpression) return new MethodCallExpressionNode(this, methodCallExpression);
             if (expression is NewArrayExpression newArrayExpression) return new NewArrayExpressionNode(this, newArrayExpression);
@@ -117,8 +111,11 @@ namespace Serialize.Linq.Factories
             if (parameter is CatchBlock catchBlock) return new CatchBlockNode(this, catchBlock);
             if (parameter is SwitchCase switchCase) return new SwitchCaseNode(this, switchCase);
             if (parameter is ElementInit elementInit) return new ElementInitNode(this, elementInit);
-            if (parameter is MemberInfo memberInfo) return new MemberInfoNode(this, memberInfo);
-            if (parameter is MemberBinding memberBinding) return MemberBindingNode.Create(this, memberBinding);
+            if (parameter is FieldInfo fieldInfo) return new FieldInfoNode(this, fieldInfo);
+            if (parameter is MemberAssignment assignment) return new MemberAssignmentNode(this, assignment);
+            if (parameter is MemberListBinding listBinding) return new MemberListBindingNode(this, listBinding);
+            if (parameter is MemberMemberBinding memberMemberBinding) return new MemberMemberBindingNode(this, memberMemberBinding);
+            if (parameter is PropertyInfo propertyInfo) return new PropertyInfoNode(this, propertyInfo);
             if (parameter is Expression expression) return Create(expression);
 
             throw new ArgumentException($"Unknown expression of type {parameter.GetType()}");

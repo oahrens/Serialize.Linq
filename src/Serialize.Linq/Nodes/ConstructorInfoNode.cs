@@ -24,7 +24,7 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class ConstructorInfoNode : MemberNode<ConstructorInfo>
+    public class ConstructorInfoNode : MemberInfoNode
     {
         public ConstructorInfoNode() { }
 
@@ -37,7 +37,7 @@ namespace Serialize.Linq.Nodes
         /// <param name="context">The expression context.</param>
         /// <param name="type">The type.</param>
         /// <returns></returns>
-        protected override IEnumerable<ConstructorInfo> GetMemberInfosForType(IExpressionContext context, Type type)
+        protected override IEnumerable<MemberInfo> GetMemberInfosForType(IExpressionContext context, Type type)
         {
             return type.GetConstructors(context?.BindingFlags ?? Factory.Settings.BindingFlags);
         }

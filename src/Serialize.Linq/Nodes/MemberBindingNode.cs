@@ -35,7 +35,12 @@ namespace Serialize.Linq.Nodes
             : base(factory)
         {
             this.BindingType = bindingType;
-            this.Member = new MemberInfoNode(this.Factory, memberInfo);
+            if (memberInfo is FieldInfo field)
+                Member = new FieldInfoNode(Factory, field);
+            else if (memberInfo is PropertyInfo property)
+                Member = new PropertyInfoNode(Factory, property);
+            else
+                throw new ArgumentOutOfRangeException(nameof(memberInfo));
         }
         
         #region DataMember
@@ -57,21 +62,5 @@ namespace Serialize.Linq.Nodes
         public MemberInfoNode Member { get; set; }
 
         public abstract MemberBinding ToParameter(IExpressionContext context);
-
-        internal static MemberBindingNode Create(INodeFactory factory, MemberBinding memberBinding)
-        {
-            MemberBindingNode memberBindingNode = null;
-
-            if (memberBinding is MemberAssignment)
-                memberBindingNode = new MemberAssignmentNode(factory, (MemberAssignment)memberBinding);
-            else if (memberBinding is MemberListBinding)
-                memberBindingNode = new MemberListBindingNode(factory, (MemberListBinding)memberBinding);
-            else if (memberBinding is MemberMemberBinding)
-                memberBindingNode = new MemberMemberBindingNode(factory, (MemberMemberBinding)memberBinding);
-            else if (memberBinding != null)
-                throw new ArgumentException("Unknown member binding of type " + memberBinding.GetType(), nameof(memberBinding));
-
-            return memberBindingNode;
-        }
     }
 }

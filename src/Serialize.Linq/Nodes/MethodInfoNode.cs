@@ -25,14 +25,14 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class MethodInfoNode : MemberNode<MethodInfo>
+    public class MethodInfoNode : MemberInfoNode
     {
         public MethodInfoNode() { }
 
         public MethodInfoNode(INodeFactory factory, MethodInfo memberInfo)
             : base(factory, memberInfo) { }
 
-        protected override IEnumerable<MethodInfo> GetMemberInfosForType(IExpressionContext context, Type type)
+        protected override IEnumerable<MemberInfo> GetMemberInfosForType(IExpressionContext context, Type type)
         {
             return type.GetMethods(context?.BindingFlags ?? Factory.Settings.BindingFlags);
         }
@@ -55,26 +55,21 @@ namespace Serialize.Linq.Nodes
         #endregion
         public TypeNode[] GenericArguments { get; set; }
 
-        protected override void Initialize(MethodInfo memberInfo)
+        protected override void Initialize(MemberInfo memberInfo)
         {
             base.Initialize(memberInfo);
-            if (!memberInfo.IsGenericMethod)
+            var method = (MethodInfo)memberInfo;
+            if (!method.IsGenericMethod)
                 return;
 
             this.IsGenericMethod = true;
-            this.Signature = memberInfo.GetGenericMethodDefinition().ToString();
-            this.GenericArguments = memberInfo.GetGenericArguments().Select(a => this.Factory.Create(a)).ToArray();
+            this.Signature = method.GetGenericMethodDefinition().ToString();
+            this.GenericArguments = method.GetGenericArguments().Select(a => this.Factory.Create(a)).ToArray();
         }
 
-        [Obsolete("This function is just for compatibility. Please use MethodInfoNode.ToParameter instead.", false)]
-        public override MethodInfo ToMemberInfo(IExpressionContext context)
+        public override MemberInfo ToParameter(IExpressionContext context)
         {
-            return ToParameter(context);
-        }
-
-        public override MethodInfo ToParameter(IExpressionContext context)
-        {
-            var method = base.ToParameter(context);
+            var method = (MethodInfo)base.ToParameter(context);
             if (method == null)
                 return null;
 

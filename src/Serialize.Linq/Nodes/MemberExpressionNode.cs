@@ -6,9 +6,7 @@
 //  Contributing: https://github.com/esskar/Serialize.Linq
 #endregion
 
-#if !WINDOWS_UWP
 using System;
-#endif
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -26,15 +24,18 @@ namespace Serialize.Linq.Nodes
     [Serializable]
 #endif
     #endregion
-    public class MemberExpressionNode<TMemberInfo> : ExpressionNode<MemberExpression> where TMemberInfo : MemberInfo
+    public class MemberExpressionNode : ExpressionNode<MemberExpression>
     {
         public MemberExpressionNode() { }
 
         public MemberExpressionNode(INodeFactory factory, MemberExpression expression)
-            : base(factory, expression) { }
+            : base(factory, expression)
+        {
+            this.Initialize(expression);
+        }
 
         #region DataMember
-        #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
+#if !SERIALIZE_LINQ_OPTIMIZE_SIZE
         [DataMember(EmitDefaultValue = false)]
 #else
         [DataMember(EmitDefaultValue = false, Name = "E")]
@@ -43,17 +44,23 @@ namespace Serialize.Linq.Nodes
         public ExpressionNode Expression { get; set; }
 
         #region DataMember
-        #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
+#if !SERIALIZE_LINQ_OPTIMIZE_SIZE
         [DataMember(EmitDefaultValue = false)]
 #else
         [DataMember(EmitDefaultValue = false, Name = "M")]
 #endif
         #endregion
-        public MemberNode<TMemberInfo> Member { get; set; }
+        public MemberInfoNode Member { get; set; }
 
         protected override void Initialize(MemberExpression expression)
         {
             this.Expression = this.Factory.Create(expression.Expression);
+            if (expression.Member is FieldInfo field)
+                Member = new FieldInfoNode(Factory, field);
+            else if (expression.Member is PropertyInfo property)
+                Member = new PropertyInfoNode(Factory, property);
+            else
+                throw new ArgumentOutOfRangeException(nameof(expression));
         }
 
         public override Expression ToExpression(IExpressionContext context)
