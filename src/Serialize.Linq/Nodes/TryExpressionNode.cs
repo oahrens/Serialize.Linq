@@ -40,10 +40,10 @@ namespace Serialize.Linq.Nodes
         public override Expression ToExpression(IExpressionContext context)
         {
             return Expression.MakeTry(Type?.ToType(context),
-                Body?.ToExpression(context),
-                Finally?.ToExpression(context),
-                Fault?.ToExpression(context),
-                Handlers?.ToParameters(context));
+                                      Body?.ToExpression(context),
+                                      Finally?.ToExpression(context),
+                                      Fault?.ToExpression(context),
+                                      Handlers?.ToParameters(context));
         }
 
         protected override void Initialize(TryExpression expression)

@@ -40,9 +40,9 @@ namespace Serialize.Linq.Nodes
             else if (memberInfo is PropertyInfo property)
                 Member = new PropertyInfoNode(Factory, property);
             else
-                throw new ArgumentOutOfRangeException(nameof(memberInfo));
+                throw new NotSupportedException("unrecognised MemberInfo derived type in parameter '" + nameof(memberInfo) + "'");
         }
-        
+
         #region DataMember
 #if !SERIALIZE_LINQ_OPTIMIZE_SIZE
         [DataMember(EmitDefaultValue = false)]

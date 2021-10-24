@@ -60,7 +60,7 @@ namespace Serialize.Linq.Nodes
             else if (expression.Member is PropertyInfo property)
                 Member = new PropertyInfoNode(Factory, property);
             else
-                throw new ArgumentOutOfRangeException(nameof(expression));
+                throw new NotSupportedException("unrecognised MemberInfo derived type in parameter '" + nameof(expression) + "." + nameof(expression.Member) + "'");
         }
 
         public override Expression ToExpression(IExpressionContext context)
