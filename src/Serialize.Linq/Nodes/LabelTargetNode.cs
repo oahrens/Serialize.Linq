@@ -19,15 +19,14 @@ namespace Serialize.Linq.Nodes
     {
         public LabelTargetNode() { }
 
-        public LabelTargetNode(INodeFactory factory, LabelTarget target, int id, string defaultName)
+        public LabelTargetNode(INodeFactory factory, LabelTarget target, string name)
             : base(factory)
         {
             if (target == null)
                 throw new ArgumentNullException(nameof(target));
 
-            Name = String.IsNullOrEmpty(target.Name) ? defaultName : target.Name;
-            Type = Factory.Create(target.Type);
-            Id = id;
+            this.Name = name;
+            this.Type = this.Factory.Create(target.Type);
         }
 
         [DataMember(EmitDefaultValue = false)]
@@ -35,9 +34,6 @@ namespace Serialize.Linq.Nodes
 
         [DataMember(EmitDefaultValue = false)]
         public TypeNode Type { get; set; }
-
-        [DataMember(EmitDefaultValue = false)]
-        public int Id { get; set; }
 
         public LabelTarget ToParameter(IExpressionContext context)
         {

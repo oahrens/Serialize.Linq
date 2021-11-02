@@ -121,13 +121,12 @@ namespace Serialize.Linq.Nodes
                 if (value is Expression)
                     throw new ArgumentException("Expression not allowed.", nameof(value));
 
-                var valueType = value as Type;
-                _value = valueType != null ? this.Factory.Create(valueType) : value;
+                _value = value is Type valueType ? this.Factory.Create(valueType) : value;
 
                 if (_value == null || _value is TypeNode)
                     return;
 
-                var type = base.Type != null ? base.Type.ToType(new ExpressionContext()) : null;
+                var type = base.Type?.ToType(new ExpressionContext());
                 if (type == null)
                 {
                     if (this.Factory != null)
@@ -154,8 +153,7 @@ namespace Serialize.Linq.Nodes
         /// <returns></returns>
         public override Expression ToExpression(IExpressionContext context)
         {
-            var typeNode = this.Value as TypeNode;
-            if (typeNode != null)
+            if (this.Value is TypeNode typeNode)
                 return Expression.Constant(typeNode.ToType(context), this.Type.ToType(context));
             return this.Type != null 
                 ? Expression.Constant(this.Value, this.Type.ToType(context)) 

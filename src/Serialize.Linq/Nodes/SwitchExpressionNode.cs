@@ -40,19 +40,19 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.Switch(Type?.ToType(context),
-                                     SwitchValue.ToExpression(context),
-                                     DefaultBody?.ToExpression(context),
-                                     (MethodInfo)Comparison?.ToParameter(context),
-                                     Cases.ToParameters(context));
+            return Expression.Switch(this.Type?.ToType(context),
+                                     this.SwitchValue.ToExpression(context),
+                                     this.DefaultBody?.ToExpression(context),
+                                     (MethodInfo)this.Comparison?.ToParameter(context),
+                                     this.Cases.ToParameters(context));
         }
 
         protected override void Initialize(SwitchExpression expression)
         {
-            this.Cases = new ExpressionParameterNodeList<SwitchCase, SwitchCaseNode>(Factory, expression.Cases);
-            this.Comparison = new MethodInfoNode(Factory, expression.Comparison);
-            this.DefaultBody = Factory.Create(expression.DefaultBody);
-            this.SwitchValue = Factory.Create(expression.SwitchValue);
+            this.Cases = new ExpressionParameterNodeList<SwitchCase, SwitchCaseNode>(this.Factory, expression.Cases);
+            this.Comparison = new MethodInfoNode(this.Factory, expression.Comparison);
+            this.DefaultBody = this.Factory.Create(expression.DefaultBody);
+            this.SwitchValue = this.Factory.Create(expression.SwitchValue);
         }
     }
 }

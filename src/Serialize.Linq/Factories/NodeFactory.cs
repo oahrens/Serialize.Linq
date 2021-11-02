@@ -21,7 +21,6 @@ namespace Serialize.Linq.Factories
     {
         private readonly IDictionary<LabelTarget, LabelTargetNode> _labelTargets = new Dictionary<LabelTarget, LabelTargetNode>();
         private int _labelTargetCtr;
-        private int _labelTargetNameCtr;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NodeFactory"/> class.
@@ -35,7 +34,7 @@ namespace Serialize.Linq.Factories
         /// <param name="factorySettings">The factory settings to use.</param>
         public NodeFactory(FactorySettings factorySettings)
         {
-            Settings = factorySettings ?? new FactorySettings();
+            this.Settings = factorySettings ?? new FactorySettings();
         }
 
         public FactorySettings Settings { get; }
@@ -95,7 +94,7 @@ namespace Serialize.Linq.Factories
             {
                 if (!_labelTargets.TryGetValue(target, out var targetNode))
                 {
-                    targetNode = new LabelTargetNode(this, target, _labelTargetCtr, GetTargetDefaultName(target));
+                    targetNode = new LabelTargetNode(this, target, this.GetLabelTargetName(target.Name));
                     _labelTargets.Add(target, targetNode);
                     _labelTargetCtr += 1;
                 }
@@ -116,7 +115,7 @@ namespace Serialize.Linq.Factories
             if (parameter is MemberListBinding listBinding) return new MemberListBindingNode(this, listBinding);
             if (parameter is MemberMemberBinding memberMemberBinding) return new MemberMemberBindingNode(this, memberMemberBinding);
             if (parameter is PropertyInfo propertyInfo) return new PropertyInfoNode(this, propertyInfo);
-            if (parameter is Expression expression) return Create(expression);
+            if (parameter is Expression expression) return this.Create(expression);
 
             throw new ArgumentException($"Unknown expression of type {parameter.GetType()}");
         }
@@ -133,16 +132,9 @@ namespace Serialize.Linq.Factories
             return BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
         }
 
-        private string GetTargetDefaultName(LabelTarget target)
+        private string GetLabelTargetName(string labelTargetName)
         {
-            if (String.IsNullOrEmpty(target.Name))
-            {
-                _labelTargetNameCtr += 1;
-
-                return "#Label" + _labelTargetNameCtr.ToString("D", CultureInfo.InvariantCulture);
-            }
-            else
-                return null;
+            return (labelTargetName ?? String.Empty) + "#" + _labelTargetCtr.ToString();
         }
     }
 }

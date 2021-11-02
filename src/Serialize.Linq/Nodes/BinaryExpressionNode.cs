@@ -136,8 +136,7 @@ namespace Serialize.Linq.Nodes
         /// <returns></returns>
         public override Expression ToExpression(IExpressionContext context)
         {
-            var conversion = this.Conversion?.ToExpression() as LambdaExpression;
-            if (this.Method != null && conversion != null)
+            if (this.Method != null && this.Conversion?.ToExpression() is LambdaExpression conversion)
                 return Expression.MakeBinary(
                     this.NodeType,
                     this.Left.ToExpression(context), this.Right.ToExpression(context),

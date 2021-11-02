@@ -56,9 +56,9 @@ namespace Serialize.Linq.Nodes
         {
             this.Expression = this.Factory.Create(expression.Expression);
             if (expression.Member is FieldInfo field)
-                Member = new FieldInfoNode(Factory, field);
+                this.Member = new FieldInfoNode(this.Factory, field);
             else if (expression.Member is PropertyInfo property)
-                Member = new PropertyInfoNode(Factory, property);
+                this.Member = new PropertyInfoNode(this.Factory, property);
             else
                 throw new ArgumentOutOfRangeException(nameof(expression),
                                                       String.Format("Not supported derived type of type {0} from {1}.{2}.", 
@@ -68,7 +68,7 @@ namespace Serialize.Linq.Nodes
         public override Expression ToExpression(IExpressionContext context)
         {
             var member = this.Member.ToParameter(context);
-            return System.Linq.Expressions.Expression.MakeMemberAccess(Expression?.ToExpression(context), member);
+            return System.Linq.Expressions.Expression.MakeMemberAccess(this.Expression?.ToExpression(context), member);
         }
     }
 }

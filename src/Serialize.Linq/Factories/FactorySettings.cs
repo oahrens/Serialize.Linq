@@ -6,13 +6,13 @@ namespace Serialize.Linq.Factories
     {
         public FactorySettings()
         {
-            UseRelaxedTypeNames = true;
+            this.UseRelaxedTypeNames = true;
         }
 
         public FactorySettings(bool allowPrivateFieldAccess, bool useRelaxedTypeNames = true)
         {
-            AllowPrivateFieldAccess = allowPrivateFieldAccess;
-            UseRelaxedTypeNames = useRelaxedTypeNames;
+            this.AllowPrivateFieldAccess = allowPrivateFieldAccess;
+            this.UseRelaxedTypeNames = useRelaxedTypeNames;
         }
 
         public bool UseRelaxedTypeNames { get; set; }

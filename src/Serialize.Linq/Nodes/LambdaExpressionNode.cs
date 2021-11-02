@@ -83,11 +83,11 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.Lambda(Type.ToType(context), 
-                                     Body.ToExpression(context), 
-                                     Name,
-                                     TailCall,
-                                     Parameters.ToParameters(context).Cast<ParameterExpression>());
+            return Expression.Lambda(this.Type.ToType(context),
+                                     this.Body.ToExpression(context),
+                                     this.Name,
+                                     this.TailCall,
+                                     this.Parameters.ToParameters(context).Cast<ParameterExpression>());
         }
     }
 }

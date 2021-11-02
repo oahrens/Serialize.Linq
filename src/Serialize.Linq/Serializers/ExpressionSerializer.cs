@@ -59,12 +59,12 @@ namespace Serialize.Linq.Serializers
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
-            _serializer.Serialize(stream, Convert(expression, factorySettings ?? _factorySettings));
+            _serializer.Serialize(stream, this.Convert(expression, factorySettings ?? _factorySettings));
         }
 
         public Expression Deserialize(Stream stream)
         {
-            return this.Deserialize(stream, GetNewContext());
+            return this.Deserialize(stream, this.GetNewContext());
         }
 
         public Expression Deserialize(Stream stream, IExpressionContext context)
@@ -80,12 +80,12 @@ namespace Serialize.Linq.Serializers
 
         public string SerializeText(Expression expression, FactorySettings factorySettings = null)
         {
-            return TextSerializer.Serialize(Convert(expression, factorySettings ?? _factorySettings));
+            return this.TextSerializer.Serialize(this.Convert(expression, factorySettings ?? _factorySettings));
         }
 
         public Expression DeserializeText(string text)
         {
-            return this.DeserializeText(text, GetNewContext());
+            return this.DeserializeText(text, this.GetNewContext());
         }
 
         public Expression DeserializeText(string text, IExpressionContext context)
@@ -93,18 +93,18 @@ namespace Serialize.Linq.Serializers
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            var node = TextSerializer.Deserialize<ExpressionNode>(text);
+            var node = this.TextSerializer.Deserialize<ExpressionNode>(text);
             return node?.ToExpression(context);
         }
 
         public byte[] SerializeBinary(Expression expression, FactorySettings factorySettings = null)
         {
-            return BinarySerializer.Serialize(Convert(expression, factorySettings ?? _factorySettings));
+            return this.BinarySerializer.Serialize(this.Convert(expression, factorySettings ?? _factorySettings));
         }
 
         public Expression DeserializeBinary(byte[] bytes)
         {
-            return this.DeserializeBinary(bytes, GetNewContext());
+            return this.DeserializeBinary(bytes, this.GetNewContext());
         }
 
         public Expression DeserializeBinary(byte[] bytes, IExpressionContext context)
@@ -112,7 +112,7 @@ namespace Serialize.Linq.Serializers
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            var node = BinarySerializer.Deserialize<ExpressionNode>(bytes);
+            var node = this.BinarySerializer.Deserialize<ExpressionNode>(bytes);
             return node?.ToExpression(context);
         }
 

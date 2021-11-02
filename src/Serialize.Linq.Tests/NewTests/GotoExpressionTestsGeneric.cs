@@ -24,15 +24,15 @@ namespace Serialize.Linq.Tests.NewTests
 
         private static void SerializeDeserializeGotoExpressionInternal<T>(IGenericSerializer<T> serializer)
         {
-            LabelTarget returnTarget = Expression.Label();
-            LabelTarget fakeTarget0 = Expression.Label("#Label2");
-            LabelTarget fakeTarget1 = Expression.Label();
-            BlockExpression expression = Expression.Block(Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) }), Expression.Constant("GoTo")),
-                                                          Expression.Goto(returnTarget),
-                                                          Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) }), Expression.Constant("Other Work")),
-                                                          Expression.Label(fakeTarget0),
-                                                          Expression.Label(returnTarget),
-                                                          Expression.Label(fakeTarget1));
+            var returnTarget = Expression.Label();
+            var fakeTarget0 = Expression.Label("#Label2");
+            var fakeTarget1 = Expression.Label();
+            var expression = Expression.Block(Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) }), Expression.Constant("GoTo")),
+                                              Expression.Goto(returnTarget),
+                                              Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) }), Expression.Constant("Other Work")),
+                                              Expression.Label(fakeTarget0),
+                                              Expression.Label(returnTarget),
+                                              Expression.Label(fakeTarget1));
 
 
             var value = serializer.SerializeGeneric(expression);

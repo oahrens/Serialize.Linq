@@ -44,7 +44,7 @@ namespace Serialize.Linq.Nodes
         protected ExpressionNode(INodeFactory factory, TExpression expression)
             : base(factory, expression.NodeType, expression.Type)
         {
-            Initialize(expression);
+            this.Initialize(expression);
         }
 
         /// <summary>

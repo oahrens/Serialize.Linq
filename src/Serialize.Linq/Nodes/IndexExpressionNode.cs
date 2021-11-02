@@ -69,9 +69,9 @@ namespace Serialize.Linq.Nodes
 
         public override Expression ToExpression(IExpressionContext context)
         {
-            return Expression.MakeIndex(Object.ToExpression(context),
-                                        (PropertyInfo)Indexer.ToParameter(context),
-                                        Arguments.ToParameters(context));
+            return Expression.MakeIndex(this.Object.ToExpression(context),
+                                        (PropertyInfo)this.Indexer.ToParameter(context),
+                                        this.Arguments.ToParameters(context));
         }
     }
 }

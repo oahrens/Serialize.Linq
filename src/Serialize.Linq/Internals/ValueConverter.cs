@@ -23,11 +23,11 @@ namespace Serialize.Linq.Internals
     public static class ValueConverter
     {
         private static readonly IDictionary<Type, Func<object, Type, object>> _userDefinedConverters = new Dictionary<Type, Func<object, Type, object>>();
-        private static readonly Regex _dateRegex = new Regex(@"/Date\((?<date>-?\d+)((?<offsign>[-+])((?<offhours>\d{2})(?<offminutes>\d{2})))?\)/"
+        private static readonly Regex _dateRegex = new Regex(@"^/Date\((?<date>-?\d+)((?<offsign>[-+])((?<offhours>\d{2})(?<offminutes>\d{2})))?\)/$",
 #if !NETSTANDARD
-            , RegexOptions.Compiled | RegexOptions.ExplicitCapture
+            RegexOptions.Compiled | RegexOptions.ExplicitCapture
 #else
-            , RegexOptions.ExplicitCapture
+            RegexOptions.ExplicitCapture
 #endif
             );
         private static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
@@ -282,7 +282,7 @@ namespace Serialize.Linq.Internals
         // handels issue #138, thanks to Oleg Nadymov
         private static bool TryConvertToGuid(object value, Type convertTo, out Guid convertedValue)
         {
-            if (convertTo.IsAssignableFrom(typeof(Guid)) && Guid.TryParse(value.ToString(), out Guid guid))
+            if (convertTo.IsAssignableFrom(typeof(Guid)) && Guid.TryParse(value.ToString(), out var guid))
             {
                 convertedValue = guid;
                 return true;

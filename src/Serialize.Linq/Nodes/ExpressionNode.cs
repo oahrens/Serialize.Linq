@@ -42,8 +42,8 @@ namespace Serialize.Linq.Nodes
         protected ExpressionNode(INodeFactory factory, ExpressionType nodeType, Type type = null)
             : base(factory)
         {
-            NodeType = nodeType;
-            Type = new TypeNode(factory, type);
+            this.NodeType = nodeType;
+            this.Type = new TypeNode(factory, type);
         }
 
         #region DataMember
@@ -85,7 +85,7 @@ namespace Serialize.Linq.Nodes
 
         public Expression ToExpression()
         {
-            return ToExpression(new ExpressionContext());
+            return this.ToExpression(new ExpressionContext());
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Serialize.Linq.Nodes
         /// <returns></returns>
         public Expression<TDelegate> ToExpression<TDelegate>(IExpressionContext context = null)
         {
-            return ToExpression(ConvertToExpression<TDelegate>, context ?? new ExpressionContext());
+            return this.ToExpression(ConvertToExpression<TDelegate>, context ?? new ExpressionContext());
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Serialize.Linq.Nodes
         /// <returns></returns>
         public Expression<Func<TEntity, bool>> ToBooleanExpression<TEntity>(IExpressionContext context = null)
         {
-            return ToExpression(ConvertToBooleanExpression<TEntity>, context ?? new ExpressionContext());
+            return this.ToExpression(ConvertToBooleanExpression<TEntity>, context ?? new ExpressionContext());
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Serialize.Linq.Nodes
 
         public Expression ToParameter(IExpressionContext context)
         { 
-            return ToExpression(context);
+            return this.ToExpression(context);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Serialize.Linq.Nodes
         /// </returns>
         public override string ToString()
         {
-            return ToExpression().ToString();
+            return this.ToExpression().ToString();
         }
 
         /// <summary>

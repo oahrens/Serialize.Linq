@@ -82,7 +82,7 @@ namespace Serialize.Linq.Nodes
         [Obsolete("This function is just for compatibility. Please use MemberInfoNode.ToParameter instead.", false)]
         public virtual MemberInfo ToMemberInfo(IExpressionContext context)
         {
-            return ToParameter(context);
+            return this.ToParameter(context);
         }
 
         /// <summary>

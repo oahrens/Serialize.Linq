@@ -36,9 +36,9 @@ namespace Serialize.Linq.Nodes
         {
             this.BindingType = bindingType;
             if (memberInfo is FieldInfo field)
-                Member = new FieldInfoNode(Factory, field);
+                this.Member = new FieldInfoNode(this.Factory, field);
             else if (memberInfo is PropertyInfo property)
-                Member = new PropertyInfoNode(Factory, property);
+                this.Member = new PropertyInfoNode(this.Factory, property);
             else
                 throw new ArgumentOutOfRangeException(nameof(memberInfo), "Not supported derived type of type " + nameof(MemberInfo));
         }

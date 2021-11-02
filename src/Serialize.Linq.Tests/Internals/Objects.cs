@@ -6,6 +6,8 @@
 //  Contributing: https://github.com/esskar/Serialize.Linq
 #endregion
 
+using System;
+
 namespace Serialize.Linq.Tests.Internals
 {
     public interface IFoo
@@ -30,7 +32,7 @@ namespace Serialize.Linq.Tests.Internals
 
         public string GetName()
         {
-            return string.Format("{0} {1}", this.FirstName, this.LastName);
+            return String.Format("{0} {1}", this.FirstName, this.LastName);
         }
     }
 

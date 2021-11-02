@@ -63,10 +63,10 @@ namespace Serialize.Linq.Internals
             {
                 _referencedTypes = new HashSet<Type>();
                 foreach (var propertyType in from memberInfo in _type.GetMembers(_bindingFlags)
-                                             where IsConsideredMember(memberInfo)
+                                             where this.IsConsideredMember(memberInfo)
                                              select memberInfo.GetReturnType())
                 {
-                    if (!_seenTypes.Contains(propertyType) && IsConsideredType(propertyType))
+                    if (!_seenTypes.Contains(propertyType) && this.IsConsideredType(propertyType))
                     {
                         _referencedTypes.Add(propertyType);
                     }

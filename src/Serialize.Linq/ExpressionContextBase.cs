@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Serialize.Linq.Interfaces;
 using Serialize.Linq.Nodes;
 
@@ -22,18 +23,25 @@ namespace Serialize.Linq
 
         private readonly IDictionary<string, Type> _typeCache = new Dictionary<string, Type>();
 
-        private readonly IDictionary<int, LabelTarget> _labelTargetCache = new Dictionary<int, LabelTarget>();
+        private readonly IDictionary<string, LabelTarget> _labelTargetCache = new Dictionary<string, LabelTarget>();
+
+        private readonly Regex _nameRegex = new Regex(@"^(?<name>.*)#\d+$",
+#if !NETSTANDARD
+            RegexOptions.Compiled);
+#else
+            RegexOptions.None);
+#endif
 
         protected ExpressionContextBase() { }
 
         protected ExpressionContextBase(bool allowPrivateFieldAccess)
         {
-            AllowPrivateFieldAccess = allowPrivateFieldAccess;
+            this.AllowPrivateFieldAccess = allowPrivateFieldAccess;
         }
 
         public bool AllowPrivateFieldAccess { get; set; }
 
-        public virtual BindingFlags BindingFlags => AllowPrivateFieldAccess ? Constants.ALSO_NON_PUBLIC_BINDING : Constants.PUBLIC_ONLY_BINDING;
+        public virtual BindingFlags BindingFlags => this.AllowPrivateFieldAccess ? Constants.ALSO_NON_PUBLIC_BINDING : Constants.PUBLIC_ONLY_BINDING;
 
         [Obsolete("This function is just for compatibility. Please use ExpressionContext.BindingFlags instead.", false)]
         public virtual BindingFlags? GetBindingFlags()
@@ -62,10 +70,10 @@ namespace Serialize.Linq
         {
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
-            if (!_labelTargetCache.TryGetValue(node.Id, out var target))
+            if (!_labelTargetCache.TryGetValue(node.Name, out var target))
             {
-                target = Expression.Label(node.Type.ToType(this), node.Name);
-                _labelTargetCache.Add(node.Id, target);
+                target = Expression.Label(node.Type.ToType(this), this.GetLabelTargetName(node.Name));
+                _labelTargetCache.Add(node.Name, target);
             }
             return target;
         }
@@ -82,7 +90,7 @@ namespace Serialize.Linq
                 {
                     if ((type = Type.GetType(node.Name)) == null)
                     {
-                        using (IEnumerator<Assembly> enumerator = this.GetAssemblies().GetEnumerator())
+                        using (var enumerator = this.GetAssemblies().GetEnumerator())
                         {
                             while (enumerator.MoveNext() && type == null)
                                 type = enumerator.Current.GetType(node.Name);
@@ -93,6 +101,15 @@ namespace Serialize.Linq
 
                 return type;
             }
+        }
+
+        private string GetLabelTargetName(string nodeName)
+        {
+            var match = _nameRegex.Match(nodeName);
+            if (match.Groups["name"].Value.Length > 0)
+                return match.Groups["name"].Value;
+            else
+                return null;
         }
 
         protected abstract IEnumerable<Assembly> GetAssemblies();

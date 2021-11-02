@@ -29,9 +29,7 @@ namespace Serialize.Linq.Factories
         public TypeResolverNodeFactory(IEnumerable<Type> expectedTypes, FactorySettings factorySettings = null)
             : base(factorySettings)
         {
-            if (expectedTypes == null)
-                throw new ArgumentNullException(nameof(expectedTypes));
-            _expectedTypes = expectedTypes;
+            _expectedTypes = expectedTypes ?? throw new ArgumentNullException(nameof(expectedTypes));
         }
 
         /// <summary>
